@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
 import 'Globals.dart';
 
 class ChoiceChipDemo extends StatefulWidget {
@@ -38,11 +38,11 @@ class _ChoiceChipDemoState extends State<ChoiceChipDemo> with RestorationMixin {
         ChoiceChip(
           avatar: isPressed1
               ? const Icon(
-                  FontAwesome5Solid.fish,
+                  FontAwesome5.fish,
                   color: Color.fromARGB(255, 142, 160, 197),
                 )
               : const Icon(
-                  FontAwesome5Solid.fish,
+                  FontAwesome5.fish,
                   color: Color.fromARGB(255, 255, 255, 255),
                 ),
           label: isPressed1

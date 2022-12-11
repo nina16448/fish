@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'Globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
 
 class MyTable extends StatefulWidget {
   const MyTable({super.key});
@@ -61,7 +61,7 @@ class MyTableButtonState extends State<MyTable> {
                           label: (selectedChoices1.contains(index + ID * 6))
                               ? (iconstate[index + ID * 6] == 1)
                                   ? const Icon(
-                                      FontAwesome5Solid.fish,
+                                      FontAwesome5.fish,
                                       color: Color.fromARGB(255, 255, 255, 255),
                                       // size: 10,
                                     )
@@ -116,7 +116,7 @@ class MyTableButtonState extends State<MyTable> {
                           label: (selectedChoices2.contains(index + ID * 6))
                               ? (iconstate2[index + ID * 6] == 1)
                                   ? const Icon(
-                                      FontAwesome5Solid.fish,
+                                      FontAwesome5.fish,
                                       color: Color.fromARGB(255, 255, 255, 255),
                                       // size: 10,
                                     )

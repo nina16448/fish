@@ -6,7 +6,7 @@ import 'Globals.dart';
 import 'EditPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import '../database/database.dart';
 import 'package:sqflite/sqflite.dart';

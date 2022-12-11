@@ -2,7 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:vector_math/vector_math_geometry.dart';
 import 'class/Choose_Button.dart';
@@ -237,7 +237,7 @@ class _FisherHomeState extends State<FisherHome> {
                       Icons.local_dining)
                   : const Icon(
                       color: Color.fromARGB(255, 44, 84, 121),
-                      FontAwesome5Solid.fish),
+                      FontAwesome5.fish),
               const SizedBox(
                 width: 15,
               ),
