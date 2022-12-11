@@ -30,12 +30,19 @@ class _Captain_HomeState extends State<Captain_Home> {
   final PageController controller = PageController(initialPage: 1000);
   List<Member> searchList = [];
 
-  void getData() async {
-
-    searchList = await CrewDB.getMember(Crewdb);
+  void initList() async {
+    final list = await CrewDB.getMember(Crewdb, 'All');
+    setState(() {
+      searchList = list;
+    });
   }
 
   @override
+  void initState() {
+    super.initState();
+    initList();
+  }
+
   Widget build(BuildContext context) {
     return Container(
       //主體是Container
@@ -54,11 +61,12 @@ class _Captain_HomeState extends State<Captain_Home> {
         ),
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          leadingWidth: 90,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           toolbarHeight: 100,
           leading: IconButton(
-            iconSize: 33.0,
+            iconSize: 40.0,
             icon: const Icon(
               Icons.menu,
               color: Color.fromARGB(255, 55, 81, 136),
@@ -74,6 +82,7 @@ class _Captain_HomeState extends State<Captain_Home> {
               GestureDetector(
                 child: Container(
                   padding: const EdgeInsets.only(
+                    top: 10,
                     bottom:
                         2, // This can be the space you need between text and underline
                   ),
@@ -87,7 +96,7 @@ class _Captain_HomeState extends State<Captain_Home> {
                     '               工時登記',
                     style: TextStyle(
                       color: Color.fromARGB(255, 82, 82, 82),
-                      fontSize: 23.0,
+                      fontSize: 30.0,
                       // decoration: TextDecoration.underline,
                     ),
                   ),
@@ -103,37 +112,49 @@ class _Captain_HomeState extends State<Captain_Home> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              TextField(
-                //搜尋欄
-                onChanged: (value) {
-                  setState(() {
-                    filterSearchResults(value);
-                  });
-                },
-                cursorColor: const Color.fromARGB(255, 135, 168, 202),
-                style: const TextStyle(color: Color.fromARGB(255, 30, 43, 51)),
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                child: TextField(
+                  //搜尋欄
+                  onChanged: (value) {
+                    setState(() {
+                      filterSearchResults(value);
+                    });
+                  },
+                  cursorColor: const Color.fromARGB(255, 135, 168, 202),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 30, 43, 51),
                   ),
-                  labelStyle: const TextStyle(
-                      color: Color.fromARGB(255, 126, 126, 126)),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 2.0),
-                  filled: true,
-                  fillColor: const Color.fromARGB(255, 255, 255, 255),
-                  focusColor: const Color.fromARGB(255, 255, 255, 255),
-                  hoverColor: Color.fromARGB(255, 230, 230, 230),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(100),
-                    borderSide: BorderSide.none,
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
+                    ),
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(255, 126, 126, 126)),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    filled: true,
+                    fillColor: const Color.fromARGB(255, 255, 255, 255),
+                    focusColor: const Color.fromARGB(255, 255, 255, 255),
+                    hoverColor: Color.fromARGB(255, 230, 230, 230),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(100),
+                      borderSide: BorderSide.none,
+                    ),
+                    hintText: '請輸入名稱 / ID',
+                    hintStyle: const TextStyle(
+                      color: Color.fromARGB(255, 126, 126, 126),
+                    ),
+                    prefixIcon: Container(
+                        padding: EdgeInsets.only(left: 15, right: 10),
+                        child: Icon(
+                          Icons.search,
+                          size: 35,
+                        )),
+                    prefixIconColor: const Color.fromARGB(255, 135, 168, 202),
                   ),
-                  hintText: '請輸入名稱/ID',
-                  hintStyle: const TextStyle(
-                    color: Color.fromARGB(255, 126, 126, 126),
-                  ),
-                  prefixIcon: const Icon(Icons.search),
-                  prefixIconColor: const Color.fromARGB(255, 135, 168, 202),
                 ),
               ),
               const SizedBox(
@@ -142,6 +163,9 @@ class _Captain_HomeState extends State<Captain_Home> {
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
+                    SizedBox(
+                      width: 20,
+                    ),
                     ChoiceChipDemo(), //工作與用餐按鈕
                     Expanded(
                       child: Row(
@@ -158,6 +182,7 @@ class _Captain_HomeState extends State<Captain_Home> {
                                 );
                               });
                             },
+                            iconSize: 30,
                             icon: Icon(Icons.chevron_left),
                             color: Color.fromARGB(255, 82, 82, 82),
                           ),
@@ -166,7 +191,7 @@ class _Captain_HomeState extends State<Captain_Home> {
                               '${aTime.year}/${aTime.month}/${aTime.day}',
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 82, 82, 82),
-                                fontSize: 16.0,
+                                fontSize: 20.0,
                                 // decoration: TextDecoration.underline,
                               ),
                             ),
@@ -192,6 +217,7 @@ class _Captain_HomeState extends State<Captain_Home> {
                                 // aTime = aTime.add(const Duration(days: 1));
                               });
                             },
+                            iconSize: 30,
                             icon: Icon(Icons.chevron_right),
                             color: Color.fromARGB(255, 82, 82, 82),
                           ),
@@ -245,9 +271,11 @@ class _Captain_HomeState extends State<Captain_Home> {
     );
   }
 
-  void filterSearchResults(String query) async {
+  List<Member> reclist = [];
+
+  void filterSearchResults(String query) {
     List<Member> dummySearchList = [];
-    dummySearchList.addAll(await CrewDB.getMember(Crewdb));
+    dummySearchList.addAll(_alldata());
     if (query.isNotEmpty) {
       List<Member> dummyListData = [];
       dummySearchList.forEach((item) {
@@ -263,14 +291,30 @@ class _Captain_HomeState extends State<Captain_Home> {
       });
       return;
     } else {
-      setState(() async {
+      setState(() {
         searchList.clear();
         // searchList.addAll(getList());
-        searchList.addAll(await CrewDB.getMember(Crewdb));
+        searchList.addAll(_alldata());
         // searchList = globalList;
         print('global size:');
         // print(globalList.length);
       });
     }
+  }
+
+  List<Member> _alldata() {
+    getData();
+    return reclist;
+  }
+
+  void addList(Member addk) async {
+    await CrewDB.AddMember(addk, Crewdb);
+  }
+
+  void getData() async {
+    final list = await CrewDB.getMember(Crewdb);
+    setState(() {
+      reclist = list;
+    });
   }
 }

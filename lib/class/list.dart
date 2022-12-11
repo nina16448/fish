@@ -23,7 +23,7 @@ class _StepsState extends State<Steps> {
     return ListView.builder(
       padding: const EdgeInsets.only(top: 0, right: 10, bottom: 50),
       itemBuilder: (BuildContext context, int index) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
         child: _buildTiles(widget.namelist[index]),
       ),
       itemCount: widget.namelist.length,
@@ -33,7 +33,9 @@ class _StepsState extends State<Steps> {
   Widget _buildTiles(Member root) {
     return Card(
       child: ExpansionTile(
+        tilePadding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         leading: const Icon(
+          size: 35,
           Icons.anchor,
           color: Color.fromARGB(255, 142, 160, 197),
         ),
@@ -42,7 +44,7 @@ class _StepsState extends State<Steps> {
           root.Name,
           style: const TextStyle(
             color: Color.fromARGB(255, 82, 82, 82),
-            fontSize: 20.0,
+            fontSize: 24.0,
           ),
         ),
         children: const [MyTable()],

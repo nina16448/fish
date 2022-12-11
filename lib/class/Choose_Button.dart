@@ -36,30 +36,22 @@ class _ChoiceChipDemoState extends State<ChoiceChipDemo> with RestorationMixin {
     return Wrap(
       children: [
         ChoiceChip(
-          avatar: isPressed1
-              ? const Icon(
-                  FontAwesome5.fish,
-                  color: Color.fromARGB(255, 142, 160, 197),
-                )
-              : const Icon(
-                  FontAwesome5.fish,
-                  color: Color.fromARGB(255, 255, 255, 255),
-                ),
-          label: isPressed1
-              ? const Text(
-                  '工作',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 142, 160, 197),
-                    fontSize: 16.0,
-                  ),
-                )
-              : const Text(
-                  '工作',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    fontSize: 16.0,
-                  ),
-                ),
+          avatar: Icon(
+            FontAwesome5.fish,
+            size: 30,
+            color: (isPressed1)
+                ? Color.fromARGB(255, 142, 160, 197)
+                : Color.fromARGB(255, 255, 255, 255),
+          ),
+          label: Text(
+            '工作',
+            style: TextStyle(
+              color: (isPressed1)
+                  ? Color.fromARGB(255, 142, 160, 197)
+                  : Color.fromARGB(255, 255, 255, 255),
+              fontSize: 20.0,
+            ),
+          ),
           labelPadding: const EdgeInsets.fromLTRB(10, 4, 10, 2),
           backgroundColor: const Color.fromARGB(255, 224, 232, 248),
           selectedColor: const Color.fromARGB(255, 44, 84, 121),
@@ -78,30 +70,22 @@ class _ChoiceChipDemoState extends State<ChoiceChipDemo> with RestorationMixin {
         ),
         const SizedBox(width: 8),
         ChoiceChip(
-          avatar: isPressed2
-              ? const Icon(
-                  Icons.local_dining,
-                  color: Color.fromARGB(255, 142, 160, 197),
-                )
-              : const Icon(
-                  Icons.local_dining,
-                  color: Color.fromARGB(255, 255, 255, 255),
-                ),
-          label: isPressed2
-              ? const Text(
-                  '用餐',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 142, 160, 197),
-                    fontSize: 16.0,
-                  ),
-                )
-              : const Text(
-                  '用餐',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    fontSize: 16.0,
-                  ),
-                ),
+          avatar: Icon(
+            Icons.local_dining,
+            size: 30,
+            color: (isPressed2)
+                ? Color.fromARGB(255, 142, 160, 197)
+                : Color.fromARGB(255, 255, 255, 255),
+          ),
+          label: Text(
+            '用餐',
+            style: TextStyle(
+              color: (isPressed2)
+                  ? Color.fromARGB(255, 142, 160, 197)
+                  : Color.fromARGB(255, 255, 255, 255),
+              fontSize: 20.0,
+            ),
+          ),
           labelPadding: const EdgeInsets.fromLTRB(10, 4, 10, 2),
           backgroundColor: const Color.fromARGB(255, 224, 232, 248),
           selectedColor: const Color.fromARGB(255, 44, 84, 121),

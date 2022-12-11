@@ -34,7 +34,7 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
           width: 190,
           color: Colors.transparent,
           alignment: Alignment.centerRight,
-          height: 35,
+          height: 45,
           child: _cupertinoButton(),
         ),
         const SizedBox(
@@ -47,7 +47,7 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
   CupertinoButton _cupertinoButton() {
     return CupertinoButton(
       color: const Color.fromARGB(255, 237, 110, 74),
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       disabledColor: Colors.grey,
       onPressed: () {
         final snackBar = SnackBar(
@@ -66,7 +66,7 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
                   fontFamily: 'GenJyuu',
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 255, 255, 255),
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                   // decoration: TextDecoration.underline,
                 ),
               ),
@@ -79,20 +79,6 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
           duration: Duration(milliseconds: 800),
           elevation: 30,
         );
-        // final snackBar = SnackBar(
-        //   backgroundColor: Colors.black.withOpacity(0.7),
-        //   duration: Duration(milliseconds: 500),
-        //   content: const Text(
-        //     '未登記時段',
-        //     style: TextStyle(
-        //       fontFamily: 'GenJyuu',
-        //       fontWeight: FontWeight.bold,
-        //       color: Color.fromARGB(255, 255, 255, 255),
-        //       fontSize: 16.0,
-        //       // decoration: TextDecoration.underline,
-        //     ),
-        //   ),
-        // );
         setState(() {
           checkState
               ? _showAlertDialog(context)
@@ -104,7 +90,7 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
         '確認登記',
         style: TextStyle(
           color: Color.fromARGB(255, 255, 255, 255),
-          fontSize: 14.0,
+          fontSize: 20.0,
           fontFamily: 'GenJyuu',
         ),
       ),

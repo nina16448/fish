@@ -44,34 +44,40 @@ class MyTableButtonState extends State<MyTable> {
             (index) {
               return Column(
                 children: [
+                  const SizedBox(
+                    height: 5,
+                  ),
                   Container(
-                    width: 70,
+                    width: 90,
                     alignment: Alignment.centerLeft,
-                    child: Text('${index + ID * 6}'),
+                    child: Text(
+                      '${index + ID * 6}',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Color.fromARGB(255, 105, 117, 143)),
+                    ),
                   ),
                   Row(
                     children: [
                       Container(
-                        width: 35,
+                        height: 50,
+                        width: 50,
                         child: ChoiceChip(
                           backgroundColor:
                               const Color.fromARGB(255, 224, 232, 248),
                           selectedColor: const Color.fromARGB(255, 44, 84, 121),
-                          labelPadding: const EdgeInsets.all(1),
+                          labelPadding: const EdgeInsets.all(6),
                           label: (selectedChoices1.contains(index + ID * 6))
-                              ? (iconstate[index + ID * 6] == 1)
-                                  ? const Icon(
-                                      FontAwesome5.fish,
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                      // size: 10,
-                                    )
-                                  : const Icon(
-                                      Icons.local_dining,
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                      // size: 10,
-                                    )
+                              ? Icon(
+                                  (iconstate[index + ID * 6] == 1)
+                                      ? FontAwesome5.fish
+                                      : Icons.local_dining,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  size: 30,
+                                )
                               : const SizedBox(
-                                  width: 35,
+                                  height: 50,
+                                  width: 50,
                                 ),
                           // selected: _value == index,
                           selected: selectedChoices1.contains(index + ID * 6),
@@ -79,7 +85,42 @@ class MyTableButtonState extends State<MyTable> {
                             borderRadius: BorderRadius.circular(3),
                           ),
                           onSelected: (bool selected) {
+                            final snackBar = SnackBar(
+                              content: Row(
+                                children: const [
+                                  Icon(
+                                    Icons.warning,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Text(
+                                    '未選擇登記狀態，請選擇工作/用餐',
+                                    style: TextStyle(
+                                      fontFamily: 'GenJyuu',
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      fontSize: 20.0,
+                                      // decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              backgroundColor:
+                                  Color.fromARGB(255, 237, 110, 74),
+                              behavior: SnackBarBehavior.floating,
+                              margin: EdgeInsets.all(30),
+                              shape: StadiumBorder(),
+                              duration: Duration(milliseconds: 800),
+                              elevation: 30,
+                            );
                             setState(() {
+                              if (ButtonState == -1 &&
+                                  !selectedChoices1.contains(index + ID * 6)) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }
                               iconstate[index + ID * 6] = ButtonState;
                               print(index + ID * 6);
                               // selectedChoices.add(index);
@@ -107,26 +148,27 @@ class MyTableButtonState extends State<MyTable> {
                           },
                         ),
                       ),
+                      const SizedBox(
+                        width: 2,
+                      ),
                       Container(
-                        width: 35,
+                        height: 50,
+                        width: 50,
                         child: ChoiceChip(
                           backgroundColor: Color.fromARGB(255, 232, 239, 253),
                           selectedColor: const Color.fromARGB(255, 44, 84, 121),
-                          labelPadding: const EdgeInsets.all(1),
+                          labelPadding: const EdgeInsets.all(5),
                           label: (selectedChoices2.contains(index + ID * 6))
-                              ? (iconstate2[index + ID * 6] == 1)
-                                  ? const Icon(
-                                      FontAwesome5.fish,
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                      // size: 10,
-                                    )
-                                  : const Icon(
-                                      Icons.local_dining,
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                      // size: 10,
-                                    )
+                              ? Icon(
+                                  (iconstate2[index + ID * 6] == 1)
+                                      ? FontAwesome5.fish
+                                      : Icons.local_dining,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  size: 30,
+                                )
                               : const SizedBox(
-                                  width: 35,
+                                  height: 50,
+                                  width: 50,
                                 ),
                           // selected: _value == index,
                           selected: selectedChoices2.contains(index + ID * 6),
@@ -134,7 +176,42 @@ class MyTableButtonState extends State<MyTable> {
                             borderRadius: BorderRadius.circular(3),
                           ),
                           onSelected: (bool selected) {
+                            final snackBar = SnackBar(
+                              content: Row(
+                                children: const [
+                                  Icon(
+                                    Icons.warning,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Text(
+                                    '未選擇登記狀態，請選擇工作/用餐',
+                                    style: TextStyle(
+                                      fontFamily: 'GenJyuu',
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      fontSize: 20.0,
+                                      // decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              backgroundColor:
+                                  Color.fromARGB(255, 237, 110, 74),
+                              behavior: SnackBarBehavior.floating,
+                              margin: EdgeInsets.all(30),
+                              shape: StadiumBorder(),
+                              duration: Duration(milliseconds: 800),
+                              elevation: 30,
+                            );
                             setState(() {
+                              if (ButtonState == -1 &&
+                                  !selectedChoices2.contains(index + ID * 6)) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }
                               iconstate2[index + ID * 6] = ButtonState;
                               print(index + ID * 6);
                               // selectedChoices.add(index);

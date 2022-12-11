@@ -141,6 +141,25 @@ class CrewDB {
     });
   }
 
+  static Future<List<Member>> getID(Future<Database> DB, String name) async {
+    final db = await DB;
+    // Query the table for all The Dogs.
+    final List<Map<String, dynamic>> maps;
+
+    maps = await db.rawQuery('SELECT * FROM Member where Name = ?', [name]);
+
+    // Convert the List<Map<String, dynamic> into a List<Dog>.
+    return List.generate(maps.length, (i) {
+      return Member(
+        Id: maps[i]['Id'],
+        Name: maps[i]['Name'],
+        Passwd: maps[i]['Passwd'],
+        Position: maps[i]['Position'],
+        Wplace: maps[i]['Wplace'],
+      );
+    });
+  }
+
   static Future<void> updateMember(Member member, Future<Database> DB) async {
     final Database db = await DB;
     await db.update(

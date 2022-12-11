@@ -243,18 +243,21 @@ class _HomePage extends State<HomePage> {
   }
 }
 
+List<Member> member = [];
+List<Member> memberid = [];
 int _cheak_ID(String ID, String PW) {
-  List<Member> member = [];
   //判斷是漁工還是船長
-  if (ID.compareTo('devmode') == 0 && PW.compareTo('zxcv0206') == 0) {
+  if (ID.compareTo('devmode') == 0 && PW.compareTo('devmode') == 0) {
     return 1;
   }
 
-  void getData() async {
-    member = await CrewDB.getMember(Crewdb, ID);
-  }
+  getData(ID, PW);
 
-  if (member.isEmpty) return 0;
-
+  if (member.isEmpty && memberid.isEmpty) return 0;
   return 2;
+}
+
+void getData(String ID, String PW) async {
+  member = await CrewDB.getMember(Crewdb, ID);
+  memberid = await CrewDB.getID(Crewdb, ID);
 }
