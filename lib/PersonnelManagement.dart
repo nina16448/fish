@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'class/Globals.dart';
 import 'class/EditPage.dart';
 import 'class/Timeout__Warning.dart';
@@ -26,10 +27,24 @@ class Management extends StatefulWidget {
 
 // ignore: camel_case_types
 class _Management extends State<Management> {
+  List<Member> allmember = [];
+
+  void initList() async {
+    final list = await CrewDB.getMember(Crewdb, 'All');
+    setState(() {
+      allmember = list;
+    });
+  }
+
   void updateList(String value) {}
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
+  void initState() {
+    super.initState();
+    initList();
+  }
+
   Widget build(BuildContext context) {
     return Container(
       //主體是Container
@@ -102,7 +117,15 @@ class _Management extends State<Management> {
                 ),
                 // TimeList(),
 
-                Expanded(child: ManList()),
+                Expanded(
+                    child: ListView.builder(
+                  padding: const EdgeInsets.only(top: 0, right: 10, bottom: 50),
+                  itemBuilder: (BuildContext context, int index) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: _item(allmember[index], index),
+                  ),
+                  itemCount: allmember.length,
+                )),
               ],
             ),
           ),
@@ -126,6 +149,78 @@ class _Management extends State<Management> {
                   ));
             },
           )),
+    );
+  }
+
+  Widget _item(Member root, int index) {
+    return Column(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            color: Colors.white,
+            child: Slidable(
+              groupTag: "alll",
+              // Specify a key if the Slidable is dismissible.
+              key: ValueKey(index),
+              // The end action pane is the one at the right or the bottom side.
+
+              endActionPane: ActionPane(
+                // dismissible: DismissiblePane(
+                //     dismissThreshold: 0.99,
+                //     onDismissed: () {
+                //       globalList.remove(root);
+                //     }),
+                extentRatio: 0.1,
+                motion: ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (context) async {
+                      await CrewDB.deleteMember(root.Id, Crewdb);
+                      setState(() {
+                        allmember.remove(root);
+                      });
+                    },
+                    backgroundColor: Color(0xFFFE4A49),
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                  ),
+                ],
+              ),
+
+              child: ListTile(
+                leading: const Icon(
+                  Icons.anchor,
+                  color: Color.fromARGB(255, 142, 160, 197),
+                ),
+                title: Text(
+                  root.Name,
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 82, 82, 82),
+                    fontSize: 20.0,
+                  ),
+                ),
+                subtitle: Text(
+                  root.Wplace,
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 82, 82, 82),
+                    fontSize: 20.0,
+                  ),
+                ),
+                onTap: () {
+                  setState(() {
+                    showDataAlert(1, root);
+                    print(root.Name);
+                  });
+                },
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 6.0,
+        ),
+      ],
     );
   }
 
@@ -229,10 +324,11 @@ class _Management extends State<Management> {
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
                         onPressed: () async {
-                          // setState(() async {
-                          await CrewDB.AddMember(edit, Crewdb);
-                          // Crewdb = CrewDB.getDB();
-                          // });
+                          setState(() {
+                            addList(edit);
+                            getData();
+                            allmember.add(edit);
+                          });
                           Navigator.of(context).pop();
                         },
                         style: ElevatedButton.styleFrom(
@@ -256,5 +352,13 @@ class _Management extends State<Management> {
             ),
           );
         });
+  }
+
+  void addList(Member addk) async {
+    await CrewDB.AddMember(addk, Crewdb);
+  }
+
+  void getData() async {
+    allmember = await CrewDB.getMember(Crewdb);
   }
 }

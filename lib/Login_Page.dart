@@ -246,12 +246,11 @@ class _HomePage extends State<HomePage> {
 int _cheak_ID(String ID, String PW) {
   List<Member> member = [];
   //判斷是漁工還是船長
-  if (ID.compareTo('DevMode') == 0 && PW.compareTo('zxcv0206') == 0) {
+  if (ID.compareTo('devmode') == 0 && PW.compareTo('zxcv0206') == 0) {
     return 1;
   }
 
   void getData() async {
-
     member = await CrewDB.getMember(Crewdb, ID);
   }
 
