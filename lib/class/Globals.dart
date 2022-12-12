@@ -16,7 +16,13 @@ DateTime aTime = DateTime.now();
 int prev = 1000;
 bool idRight = true;
 bool passRight = true;
-Namelist now_login = Namelist('');
+Member now_login = Member(
+  Id: '',
+  Name: '',
+  Passwd: '',
+  Position: '',
+  Wplace: '',
+);
 
 class Timelist {
   Timelist(

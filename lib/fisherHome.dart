@@ -32,15 +32,15 @@ class _FisherHomeState extends State<FisherHome> {
   final PageController controller = PageController(initialPage: 1000);
   List<Member> searchList = [];
 
-  void getData() async {
-    searchList = await CrewDB.getMember(Crewdb);
-  }
+  // void getData() async {
+  //   searchList = await CrewDB.getMember(Crewdb);
+  // }
 
   NavigationRailLabelType labelType = NavigationRailLabelType.all;
   bool showLeading = false;
   bool showTrailing = false;
   double groupAligment = -1.0;
-  Namelist now = now_login;
+  Member now = now_login;
   int? _timerange = 0;
   List<Timelist> localtimelist = getunconfirmed();
 
@@ -517,18 +517,18 @@ class _FisherHomeState extends State<FisherHome> {
       // ignore: sort_child_properties_last
       child: ListTile(
         onTap: () {
-          Navigator.popAndPushNamed(context, '/');
+          Navigator.popUntil(context, ModalRoute.withName('/'));
         },
         leading: const Icon(
           Icons.logout,
-          size: 30,
+          size: 35,
         ),
         iconColor: const Color.fromARGB(255, 245, 245, 245),
         title: const Text(
           '登出系統',
           style: TextStyle(
             color: Color.fromARGB(255, 255, 255, 255),
-            fontSize: 16,
+            fontSize: 20,
           ),
         ),
       ),
@@ -545,32 +545,22 @@ class _FisherHomeState extends State<FisherHome> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      avatar: (_value == 0)
-          ? const Icon(
-              size: 30,
-              Icons.sensor_occupied,
-              color: Color.fromARGB(255, 81, 105, 162),
-            )
-          : const Icon(
-              size: 30,
-              Icons.person,
-              color: Color.fromARGB(255, 255, 255, 255),
-            ),
-      label: (_value == 0)
-          ? const Text(
-              '個人頁面',
-              style: TextStyle(
-                color: Color.fromARGB(255, 81, 105, 162),
-                fontSize: 16,
-              ),
-            )
-          : const Text(
-              '個人頁面',
-              style: TextStyle(
-                color: Color.fromARGB(255, 255, 255, 255),
-                fontSize: 16,
-              ),
-            ),
+      avatar: Icon(
+        size: 35,
+        Icons.person,
+        color: (_value == 0)
+            ? Color.fromARGB(255, 81, 105, 162)
+            : Color.fromARGB(255, 255, 255, 255),
+      ),
+      label: Text(
+        '個人頁面',
+        style: TextStyle(
+          fontSize: 20,
+          color: (_value == 0)
+              ? Color.fromARGB(255, 81, 105, 162)
+              : Color.fromARGB(255, 255, 255, 255),
+        ),
+      ),
       selected: _value == 0,
       labelPadding: const EdgeInsets.fromLTRB(10, 4, 10, 2),
       backgroundColor: const Color.fromARGB(255, 135, 168, 202),
@@ -594,32 +584,22 @@ class _FisherHomeState extends State<FisherHome> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      avatar: (_value == 1)
-          ? const Icon(
-              size: 30,
-              Icons.notifications_active,
-              color: Color.fromARGB(255, 81, 105, 162),
-            )
-          : const Icon(
-              size: 30,
-              Icons.notifications,
-              color: Color.fromARGB(255, 255, 255, 255),
-            ),
-      label: (_value == 1)
-          ? const Text(
-              '超時紀錄',
-              style: TextStyle(
-                color: Color.fromARGB(255, 81, 105, 162),
-                fontSize: 16,
-              ),
-            )
-          : const Text(
-              '超時紀錄',
-              style: TextStyle(
-                color: Color.fromARGB(255, 255, 255, 255),
-                fontSize: 16,
-              ),
-            ),
+      avatar: Icon(
+        size: 30,
+        Icons.notifications,
+        color: (_value == 1)
+            ? Color.fromARGB(255, 81, 105, 162)
+            : Color.fromARGB(255, 255, 255, 255),
+      ),
+      label: Text(
+        '超時紀錄',
+        style: TextStyle(
+          fontSize: 20,
+          color: (_value == 1)
+              ? Color.fromARGB(255, 81, 105, 162)
+              : Color.fromARGB(255, 255, 255, 255),
+        ),
+      ),
       selected: _value == 1,
       labelPadding: const EdgeInsets.fromLTRB(10, 4, 10, 2),
       backgroundColor: const Color.fromARGB(255, 135, 168, 202),
@@ -673,7 +653,7 @@ class _FisherHomeState extends State<FisherHome> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  now.title,
+                  now.Name,
                   style: const TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.w700,
@@ -681,7 +661,7 @@ class _FisherHomeState extends State<FisherHome> {
                   ),
                 ),
                 Text(
-                  '#${now.title}',
+                  '#${now.Id}',
                   style: const TextStyle(
                       fontSize: 14.0,
                       color: Color.fromARGB(255, 226, 242, 255)),
@@ -690,32 +670,5 @@ class _FisherHomeState extends State<FisherHome> {
             )
           ],
         ));
-  }
-
-  Widget _pagechange() {
-    return PageView.builder(
-      controller: controller,
-      // itemCount: 1000,
-      itemBuilder: (context, index) {
-        return Steps(namelist: searchList);
-      },
-      onPageChanged: (int page) {
-        setState(() {
-          checkState = false;
-          print('page: $page');
-          print('prev: $prev');
-          if (prev != -1) {
-            aTime = (prev > page)
-                ? aTime.subtract(const Duration(days: 1))
-                : (prev == page)
-                    ? currentTime
-                    : aTime.add(const Duration(days: 1));
-            prev = page;
-          } else {
-            if (page == 1000) prev = 1000;
-          }
-        });
-      },
-    );
   }
 }

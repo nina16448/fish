@@ -125,6 +125,7 @@ class _HomePage extends State<HomePage> {
           print(value);
           inputS = (value.isEmpty) ? false : true;
           ID = value;
+          getData(ID);
           print(inputS);
         });
       },
@@ -137,13 +138,41 @@ class _HomePage extends State<HomePage> {
       disabledColor: Color.fromARGB(255, 196, 196, 196),
       onPressed: (inputS && inputW)
           ? () {
+              final snackBar = SnackBar(
+                content: Row(
+                  children: const [
+                    Icon(
+                      Icons.warning,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      '帳號或密碼輸入錯誤',
+                      style: TextStyle(
+                        fontFamily: 'GenJyuu',
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        fontSize: 20.0,
+                        // decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ],
+                ),
+                backgroundColor: Color.fromARGB(255, 237, 110, 74),
+                behavior: SnackBarBehavior.floating,
+                margin: EdgeInsets.all(30),
+                shape: StadiumBorder(),
+                duration: Duration(milliseconds: 1000),
+                elevation: 30,
+              );
               setState(() {
-                now_login.title = ID;
                 clearText();
                 inputS = false;
                 switch (_cheak_ID(ID, PW)) {
                   case 0:
-                    //show error
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     break;
                   case 1:
                     Navigator.pushNamed(context, '/Captain_Home');
@@ -241,23 +270,53 @@ class _HomePage extends State<HomePage> {
                   ]),
             )));
   }
-}
 
-List<Member> member = [];
-List<Member> memberid = [];
-int _cheak_ID(String ID, String PW) {
-  //判斷是漁工還是船長
-  if (ID.compareTo('devmode') == 0 && PW.compareTo('devmode') == 0) {
-    return 1;
+  List<Member> member = [];
+  List<Member> memberid = [];
+
+  int _cheak_ID(String ID, String PW) {
+    //判斷是漁工還是船長
+    if (ID.compareTo('devmode') == 0 && PW.compareTo('88888888') == 0) {
+      return 1;
+    }
+
+    debugPrint('bool的結果:');
+    debugPrint(member.toString());
+    debugPrint(memberid.toString());
+
+    // debugPrint('輸入密碼: ${PW}, 正確密碼:${memberid[0].Passwd}');
+    if (member.isEmpty && memberid.isEmpty) {
+      member.clear();
+      memberid.clear();
+      return 0;
+    }
+    if (member.isNotEmpty && PW == member[0].Passwd) {
+      now_login = member[0];
+      member.clear();
+      memberid.clear();
+      return 2;
+    }
+    if (memberid.isNotEmpty && PW == memberid[0].Passwd) {
+      now_login = memberid[0];
+      member.clear();
+      memberid.clear();
+      return 2;
+    }
+    member.clear();
+    memberid.clear();
+    return 0;
   }
 
-  getData(ID, PW);
+  void getData(String ID) async {
+    final list = await CrewDB.getMember(Crewdb, ID);
+    final list2 = await CrewDB.getID(Crewdb, ID);
 
-  if (member.isEmpty && memberid.isEmpty) return 0;
-  return 2;
-}
-
-void getData(String ID, String PW) async {
-  member = await CrewDB.getMember(Crewdb, ID);
-  memberid = await CrewDB.getID(Crewdb, ID);
+    setState(() {
+      member = list;
+      memberid = list2;
+      debugPrint("異步結果");
+      debugPrint(member.toString());
+      debugPrint(memberid.toString());
+    });
+  }
 }
