@@ -104,18 +104,21 @@ class _FisherHomeState extends State<FisherHome> {
     return Column(
       children: [
         SizedBox(
-          height: 30,
+          height: 80,
         ),
         Expanded(
             child: ListView.builder(
           padding:
               const EdgeInsets.only(top: 0, right: 10, bottom: 100, left: 10),
           itemBuilder: (BuildContext context, int index) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3),
             child: _timeoutcard(index),
           ),
           itemCount: 15,
-        ))
+        )),
+        SizedBox(
+          height: 50,
+        ),
       ],
     );
   }
@@ -125,6 +128,7 @@ class _FisherHomeState extends State<FisherHome> {
     return Card(
       child: ListTile(
         leading: const Icon(
+          size: 30,
           Icons.warning,
           color: Color.fromARGB(255, 226, 67, 67),
         ),
@@ -133,7 +137,7 @@ class _FisherHomeState extends State<FisherHome> {
               nowT, [yyyy, '/', mm, '/', dd, '           連續休息時間少於10小時！']),
           style: TextStyle(
             color: Color.fromARGB(255, 82, 82, 82),
-            fontSize: 16.0,
+            fontSize: 20.0,
           ),
         ),
       ),
@@ -153,6 +157,9 @@ class _FisherHomeState extends State<FisherHome> {
         ),
         Expanded(
           child: _worktimelist(_timerange!),
+        ),
+        SizedBox(
+          height: 50,
         ),
       ],
     );
@@ -204,7 +211,7 @@ class _FisherHomeState extends State<FisherHome> {
         style: const TextStyle(
           color: Color.fromARGB(255, 55, 81, 136),
           fontWeight: FontWeight.bold,
-          fontSize: 14.0,
+          fontSize: 16.0,
         ),
       ),
       children: [
@@ -233,9 +240,11 @@ class _FisherHomeState extends State<FisherHome> {
             child: Row(children: [
               (localtimelist[ID].state == 0)
                   ? const Icon(
+                      size: 30,
                       color: Color.fromARGB(255, 142, 160, 197),
                       Icons.local_dining)
                   : const Icon(
+                      size: 30,
                       color: Color.fromARGB(255, 44, 84, 121),
                       FontAwesome5.fish),
               const SizedBox(
@@ -245,6 +254,7 @@ class _FisherHomeState extends State<FisherHome> {
                   ? const Text(
                       '用餐',
                       style: TextStyle(
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 142, 160, 197),
                       ),
@@ -252,6 +262,7 @@ class _FisherHomeState extends State<FisherHome> {
                   : const Text(
                       '工作',
                       style: TextStyle(
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 44, 84, 121),
                       ),
@@ -262,6 +273,7 @@ class _FisherHomeState extends State<FisherHome> {
               Text(
                 formatDate(_stime, [HH, ':', nn]),
                 style: const TextStyle(
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 81, 105, 162),
                 ),
@@ -269,6 +281,7 @@ class _FisherHomeState extends State<FisherHome> {
               const Text(
                 ' 至 ',
                 style: TextStyle(
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 81, 105, 162),
                 ),
@@ -276,6 +289,7 @@ class _FisherHomeState extends State<FisherHome> {
               Text(
                 formatDate(_etime, [HH, ':', nn]),
                 style: const TextStyle(
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 81, 105, 162),
                 ),
@@ -287,6 +301,7 @@ class _FisherHomeState extends State<FisherHome> {
                   ? Text(
                       '${(_etime.difference(_stime).inMinutes) / 60}',
                       style: const TextStyle(
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 81, 105, 162),
                       ),
@@ -298,6 +313,7 @@ class _FisherHomeState extends State<FisherHome> {
                   ? const Text(
                       '小時',
                       style: TextStyle(
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 81, 105, 162),
                       ),
@@ -328,14 +344,14 @@ class _FisherHomeState extends State<FisherHome> {
                   '未確認',
                   style: TextStyle(
                     color: Color.fromARGB(255, 255, 255, 255),
-                    fontSize: 18,
+                    fontSize: 22,
                   ),
                 )
               : const Text(
                   '未確認',
                   style: TextStyle(
                     color: Color.fromARGB(255, 135, 168, 202),
-                    fontSize: 18,
+                    fontSize: 22,
                   ),
                 ),
           labelPadding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
@@ -358,14 +374,14 @@ class _FisherHomeState extends State<FisherHome> {
                   '本月',
                   style: TextStyle(
                     color: Color.fromARGB(255, 255, 255, 255),
-                    fontSize: 18,
+                    fontSize: 22,
                   ),
                 )
               : const Text(
                   '本月',
                   style: TextStyle(
                     color: Color.fromARGB(255, 135, 168, 202),
-                    fontSize: 18,
+                    fontSize: 22,
                   ),
                 ),
           labelPadding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -388,14 +404,14 @@ class _FisherHomeState extends State<FisherHome> {
                   '本週',
                   style: TextStyle(
                     color: Color.fromARGB(255, 255, 255, 255),
-                    fontSize: 18,
+                    fontSize: 22,
                   ),
                 )
               : const Text(
                   '本週',
                   style: TextStyle(
                     color: Color.fromARGB(255, 135, 168, 202),
-                    fontSize: 18,
+                    fontSize: 22,
                   ),
                 ),
           labelPadding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -420,7 +436,7 @@ class _FisherHomeState extends State<FisherHome> {
   CupertinoButton _cupertinoButton() {
     return CupertinoButton(
       color: const Color.fromARGB(255, 237, 110, 74),
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
       disabledColor: Colors.grey,
       onPressed: (isChecked.isNotEmpty)
           ? () {
@@ -429,12 +445,12 @@ class _FisherHomeState extends State<FisherHome> {
               });
             }
           : null,
-      borderRadius: BorderRadius.circular(50),
+      borderRadius: BorderRadius.circular(10),
       child: const Text(
         '確認工時',
         style: TextStyle(
           color: Color.fromARGB(255, 255, 255, 255),
-          fontSize: 18.0,
+          fontSize: 22.0,
           fontFamily: 'GenJyuu',
         ),
       ),
@@ -448,6 +464,7 @@ class _FisherHomeState extends State<FisherHome> {
         title: const Text(
           '是否確認登記時段',
           style: TextStyle(
+            fontSize: 20,
             fontFamily: 'GenJyuu',
           ),
         ),
@@ -461,7 +478,7 @@ class _FisherHomeState extends State<FisherHome> {
               '登記完經確認後將無法修改',
               style: TextStyle(
                 color: Color.fromARGB(255, 32, 42, 61),
-                // fontSize: 14.0,
+                fontSize: 18.0,
                 fontFamily: 'GenJyuu',
               ),
             ),
@@ -511,9 +528,9 @@ class _FisherHomeState extends State<FisherHome> {
 
   Widget _logout() {
     return Container(
-      width: 250,
+      width: 340,
       height: 100,
-      padding: const EdgeInsets.only(top: 50, left: 0, right: 15.0),
+      padding: const EdgeInsets.only(top: 30, left: 0, right: 15.0, bottom: 0),
       // ignore: sort_child_properties_last
       child: ListTile(
         onTap: () {
@@ -521,14 +538,14 @@ class _FisherHomeState extends State<FisherHome> {
         },
         leading: const Icon(
           Icons.logout,
-          size: 35,
+          size: 40,
         ),
         iconColor: const Color.fromARGB(255, 245, 245, 245),
         title: const Text(
           '登出系統',
           style: TextStyle(
             color: Color.fromARGB(255, 255, 255, 255),
-            fontSize: 20,
+            fontSize: 22,
           ),
         ),
       ),
@@ -541,12 +558,12 @@ class _FisherHomeState extends State<FisherHome> {
       side: BorderSide(
         color: const Color.fromARGB(255, 135, 168, 202),
       ),
-      padding: EdgeInsets.fromLTRB(5, 10, 125, 10),
+      padding: const EdgeInsets.fromLTRB(10, 15, 180, 15),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
       avatar: Icon(
-        size: 35,
+        size: 40,
         Icons.person,
         color: (_value == 0)
             ? Color.fromARGB(255, 81, 105, 162)
@@ -555,7 +572,7 @@ class _FisherHomeState extends State<FisherHome> {
       label: Text(
         '個人頁面',
         style: TextStyle(
-          fontSize: 20,
+          fontSize: 22,
           color: (_value == 0)
               ? Color.fromARGB(255, 81, 105, 162)
               : Color.fromARGB(255, 255, 255, 255),
@@ -580,12 +597,12 @@ class _FisherHomeState extends State<FisherHome> {
       side: const BorderSide(
         color: Color.fromARGB(255, 135, 168, 202),
       ),
-      padding: EdgeInsets.fromLTRB(5, 10, 125, 10),
+      padding: const EdgeInsets.fromLTRB(10, 15, 180, 15),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
       avatar: Icon(
-        size: 30,
+        size: 40,
         Icons.notifications,
         color: (_value == 1)
             ? Color.fromARGB(255, 81, 105, 162)
@@ -594,7 +611,7 @@ class _FisherHomeState extends State<FisherHome> {
       label: Text(
         '超時紀錄',
         style: TextStyle(
-          fontSize: 20,
+          fontSize: 22,
           color: (_value == 1)
               ? Color.fromARGB(255, 81, 105, 162)
               : Color.fromARGB(255, 255, 255, 255),
@@ -615,8 +632,8 @@ class _FisherHomeState extends State<FisherHome> {
 
   Widget _ledding() {
     return Container(
-        width: 250,
-        height: 170,
+        width: 350,
+        height: 190,
         padding: const EdgeInsets.only(top: 70, left: 5, right: 15.0),
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -632,8 +649,8 @@ class _FisherHomeState extends State<FisherHome> {
               width: 10,
             ),
             Container(
-              width: 60,
-              height: 60,
+              width: 70,
+              height: 70,
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 55, 81, 136),
                 borderRadius: BorderRadius.circular(100),
@@ -641,7 +658,7 @@ class _FisherHomeState extends State<FisherHome> {
               child: const Icon(
                 color: Colors.white,
                 Icons.sentiment_very_satisfied,
-                size: 45,
+                size: 50,
                 fill: 1,
               ),
             ),
@@ -655,7 +672,7 @@ class _FisherHomeState extends State<FisherHome> {
                 Text(
                   now.Name,
                   style: const TextStyle(
-                    fontSize: 24.0,
+                    fontSize: 30.0,
                     fontWeight: FontWeight.w700,
                     color: Color.fromARGB(255, 255, 255, 255),
                   ),
@@ -663,7 +680,7 @@ class _FisherHomeState extends State<FisherHome> {
                 Text(
                   '#${now.Id}',
                   style: const TextStyle(
-                      fontSize: 14.0,
+                      fontSize: 16.0,
                       color: Color.fromARGB(255, 226, 242, 255)),
                 ),
               ],
