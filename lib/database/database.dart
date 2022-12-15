@@ -42,24 +42,27 @@ class WorkSheet {
   final String MemberId;
   final String Date;
   final Uint8List Sheet;
+  final bool State;
   WorkSheet(
       {required this.SheetId,
       required this.MemberId,
       required this.Date,
-      required this.Sheet});
+      required this.Sheet,
+      required this.State});
   Map<String, dynamic> toMap() {
     return {
       'SheetId': SheetId,
       'MemberId': MemberId,
       'Date': Date,
       'Sheet': Sheet,
+      'State': Sheet,
     };
   }
 
   @override
   String toString() {
     String Str = Sheet.join(' ');
-    return "WorkSheet{SheetId: $SheetId, MemberId: $MemberId, Date: $Date, Sheet: $Str}";
+    return "WorkSheet{SheetId: $SheetId, MemberId: $MemberId, Date: $Date, Sheet: $Str, State: $State}";
   }
 }
 
@@ -219,6 +222,7 @@ class SheetDB {
         MemberId: maps[i]['MemberId'],
         Date: maps[i]['Date'],
         Sheet: maps[i]['Sheet'],
+        State: maps[i]['State'],
       );
     });
   }

@@ -89,6 +89,7 @@ void main() async {
     MemberId: '1',
     Date: now,
     Sheet: sheet1,
+    State: false,
   );
   String yesterday =
       dateFormat.format(DateTime.now().subtract(Duration(days: 1)));
@@ -147,6 +148,7 @@ void main() async {
     MemberId: '1',
     Date: yesterday,
     Sheet: sheet2,
+    State: false,
   );
   //新增三名船員
   await CrewDB.AddMember(Lee, Crewdb);

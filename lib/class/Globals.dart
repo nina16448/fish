@@ -96,6 +96,10 @@ class Namelist {
 Future<Database> Crewdb = CrewDB.getDB();
 Future<Database> Sheetdb = SheetDB.getDB();
 
+List<int> initlist() {
+  return [];
+}
+
 class fisherdata {
   fisherdata(
     this.name,

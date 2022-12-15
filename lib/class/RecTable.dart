@@ -3,6 +3,10 @@ import 'Globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
+import '../database/database.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:intl/intl.dart';
+import 'dart:typed_data';
 
 class MyTable extends StatefulWidget {
   const MyTable({super.key});
@@ -13,6 +17,8 @@ class MyTable extends StatefulWidget {
 
 class MyTableButtonState extends State<MyTable> {
   // int? _value = -1;
+  // Uint8List nowsheet = Uint8List.fromList([]);
+  
   List<int> selectedChoices1 = [];
   List<int> selectedChoices2 = [];
   List<int> iconstate =
