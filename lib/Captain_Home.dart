@@ -32,6 +32,7 @@ class _Captain_HomeState extends State<Captain_Home> {
 
   void initList() async {
     final list = await CrewDB.getMember(Crewdb, 'All');
+    
     setState(() {
       searchList = list;
     });
