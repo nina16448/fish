@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 import 'dart:typed_data';
 import 'dart:async';
 import '../class/Globals.dart';
-import 'package:codec/codec.dart';
+import 'dart:convert';
 
 //成員
 class Member {
@@ -80,8 +80,8 @@ class WorkTime {
 
   @override
   String toString() {
-    String dataString = json.encode(data);
-    return "WorkTime{SheetId: $SheetId, MemberId: $MemberId, Sheet: $Str}";
+    String dataString = json.encode(Datalist);
+    return "WorkTime{SheetId: $SheetId, MemberId: $MemberId, Sheet: $dataString}";
   }
 }
 
