@@ -38,31 +38,27 @@ class Member {
 
 //工作表
 class WorkSheet {
-  final int SheetId;
-  final String MemberId;
-  final String Date;
-  final Uint8List Sheet;
-  final bool State;
-  WorkSheet(
-      {required this.SheetId,
-      required this.MemberId,
-      required this.Date,
-      required this.Sheet,
-      required this.State});
+  int SheetId;
+  String MemberId;
+  String Date;
+  int State;
+  List<int> Sheet;
+
+  WorkSheet({required this.SheetId, required this.MemberId, required this.Date, required this.State, required this.Sheet});
   Map<String, dynamic> toMap() {
     return {
       'SheetId': SheetId,
       'MemberId': MemberId,
       'Date': Date,
+      'State': State,
       'Sheet': Sheet,
-      'State': Sheet,
     };
   }
 
   @override
   String toString() {
     String Str = Sheet.join(' ');
-    return "WorkSheet{SheetId: $SheetId, MemberId: $MemberId, Date: $Date, Sheet: $Str, State: $State}";
+    return "WorkSheet{SheetId: $SheetId, MemberId: $MemberId, Date: $Date, State: $State, Sheet: $Str}";
   }
 }
 
@@ -72,11 +68,7 @@ class WarningRecord {
   final String Name;
   final String Date;
 
-  WarningRecord(
-      {required this.recId,
-      required this.MemberId,
-      required this.Name,
-      required this.Date});
+  WarningRecord({required this.recId, required this.MemberId, required this.Name, required this.Date});
 
   Map<String, dynamic> toMap() {
     return {
@@ -118,8 +110,7 @@ class CrewDB {
   }
 
   //取得船員資料，若參數為All，則回傳所有船員資料
-  static Future<List<Member>> getMember(Future<Database> DB,
-      [String id = 'All', String name = 'none']) async {
+  static Future<List<Member>> getMember(Future<Database> DB, [String id = 'All', String name = 'none']) async {
     final db = await DB;
     // Query the table for all The Dogs.
     final List<Map<String, dynamic>> maps;
@@ -184,12 +175,28 @@ class CrewDB {
 }
 
 class SheetDB {
+  // static Future<Database> getDB() async {
+  //   return openDatabase(
+  //     join(await getDatabasesPath(), 'Sheet.db'),
+  //     onCreate: (db, version) {
+  //       return db.execute(
+  //         'CREATE TABLE WorkSheet(SheetId INT PRIMARY KEY NOT NULL, MemberId TEXT, Date TEXT, Sheet BLOB )',
+  //       );
+  //     },
+  //     onUpgrade: (db, oldVersion, newVersion) {
+  //       return db.execute(
+  //         'ALTER TABLE WorkSheet DROP COLUMN State',
+  //       );
+  //     },
+  //     version: 4,
+  //   );
+  // }
   static Future<Database> getDB() async {
     return openDatabase(
-      join(await getDatabasesPath(), 'Sheet.db'),
+      join(await getDatabasesPath(), 'SheetNew.db'),
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE WorkSheet(SheetId INT PRIMARY KEY NOT NULL, MemberId TEXT, Date TEXT, Sheet BLOB)',
+          'CREATE TABLE WorkSheet(SheetId INT PRIMARY KEY NOT NULL, MemberId TEXT, Date TEXT, Sheet BLOB, State INTEGER)',
         );
       },
       version: 1,
@@ -205,24 +212,21 @@ class SheetDB {
     );
   }
 
-  static Future<List<WorkSheet>> getsheet(
-      String id, String date, Future<Database> DB) async {
+  static Future<List<WorkSheet>> getsheet(String id, String date, Future<Database> DB) async {
     final db = await DB;
     final List<Map<String, dynamic>> maps;
     if (id == 'All') {
       maps = await db.rawQuery('SELECT * FROM WorkSheet');
     } else {
-      maps = await db.rawQuery(
-          'SELECT * FROM WorkSheet WHERE MemberId = ? AND Date = ?',
-          [id, date]);
+      maps = await db.rawQuery('SELECT * FROM WorkSheet WHERE MemberId = ? AND Date = ?', [id, date]);
     }
     return List.generate(maps.length, (i) {
       return WorkSheet(
         SheetId: maps[i]['SheetId'],
         MemberId: maps[i]['MemberId'],
         Date: maps[i]['Date'],
-        Sheet: maps[i]['Sheet'],
         State: maps[i]['State'],
+        Sheet: maps[i]['Sheet'],
       );
     });
   }
@@ -237,8 +241,7 @@ class SheetDB {
     );
   }
 
-  static Future<void> deleteSheet(
-      String id, String date, Future<Database> DB) async {
+  static Future<void> deleteSheet(String id, String date, Future<Database> DB) async {
     final Database db = await DB;
     await db.delete(
       'WorkSheet',
@@ -273,8 +276,7 @@ class WarningDB {
   }
 
   //取得船員資料，若參數為All，則回傳所有船員資料
-  static Future<List<WarningRecord>> getRecord(
-      String id, Future<Database> DB) async {
+  static Future<List<WarningRecord>> getRecord(String id, Future<Database> DB) async {
     final db = await DB;
     // Query the table for all The Dogs.
     final List<Map<String, dynamic>> maps;
@@ -294,8 +296,7 @@ class WarningDB {
     });
   }
 
-  static Future<void> updateRecord(
-      WarningRecord rec, Future<Database> DB) async {
+  static Future<void> updateRecord(WarningRecord rec, Future<Database> DB) async {
     final Database db = await DB;
     await db.update(
       'WarningRec',
@@ -305,8 +306,7 @@ class WarningDB {
     );
   }
 
-  static Future<void> deleteRecord(
-      String id, String date, Future<Database> DB) async {
+  static Future<void> deleteRecord(String id, String date, Future<Database> DB) async {
     final Database db = await DB;
     await db.delete(
       'WarningRec',

@@ -8,8 +8,10 @@ import 'dart:typed_data';
 dynamic pageButtonState = -1;
 bool confirmCheckState = false;
 
-int ButtonState = -1;
+int ButtonState = 0;
 bool checkState = false;
+
+var update_queue = Map<String, WorkSheet>();
 
 DateTime currentTime = DateTime.now();
 DateTime aTime = DateTime.now();
@@ -97,7 +99,7 @@ Future<Database> Crewdb = CrewDB.getDB();
 Future<Database> Sheetdb = SheetDB.getDB();
 
 List<int> initlist() {
-  return [];
+  return List<int>.generate(48, (int index) => 0, growable: false);
 }
 
 class fisherdata {

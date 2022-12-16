@@ -6,8 +6,10 @@ import 'RecTable.dart';
 import 'Globals.dart';
 
 class Steps extends StatefulWidget {
-  const Steps({required this.namelist, Key? key}) : super(key: key);
+  const Steps({required this.namelist, required this.nowlist, Key? key})
+      : super(key: key);
   final List<Member> namelist;
+  final DateTime nowlist;
 
   @override
   State<Steps> createState() => _StepsState();
@@ -47,7 +49,7 @@ class _StepsState extends State<Steps> {
             fontSize: 24.0,
           ),
         ),
-        children: const [MyTable()],
+        children: [MyTable(who: root, when: widget.nowlist)],
       ),
     );
   }

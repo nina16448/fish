@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'class/Choose_Button.dart';
 import 'class/Decision_Button.dart';
 import 'class/drawer.dart';
+import 'class/RecTable.dart';
 import 'class/list.dart';
 import 'class/top_bar.dart';
 import 'class/Globals.dart';
@@ -32,7 +33,7 @@ class _Captain_HomeState extends State<Captain_Home> {
 
   void initList() async {
     final list = await CrewDB.getMember(Crewdb, 'All');
-    
+
     setState(() {
       searchList = list;
     });
@@ -250,7 +251,10 @@ class _Captain_HomeState extends State<Captain_Home> {
       controller: controller,
       // itemCount: 1000,
       itemBuilder: (context, index) {
-        return Steps(namelist: searchList);
+        return Steps(
+          namelist: searchList,
+          nowlist: aTime,
+        );
       },
       onPageChanged: (int page) {
         setState(() {

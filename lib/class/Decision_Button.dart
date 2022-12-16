@@ -2,6 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'Globals.dart';
+import '../database/database.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
+import 'dart:typed_data';
 
 class FMCupertinoButtonVC extends StatefulWidget {
   FMCupertinoButtonVC({
@@ -15,6 +20,8 @@ class FMCupertinoButtonVC extends StatefulWidget {
 }
 
 class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
+  List<WorkSheet> rec = [];
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -80,9 +87,7 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
           elevation: 30,
         );
         setState(() {
-          checkState
-              ? _showAlertDialog(context)
-              : ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          checkState ? _showAlertDialog(context) : ScaffoldMessenger.of(context).showSnackBar(snackBar);
         });
       },
       borderRadius: BorderRadius.circular(50),
@@ -146,6 +151,20 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
             /// the action's text color to red.
             isDestructiveAction: true,
             onPressed: () {
+              debugPrint('確認:D');
+              setState(() {
+                for (var key in update_queue.keys) {
+                  update(update_queue[key]!);
+                  // if (rec.isEmpty) {
+                  //   addtime(update_queue[key]!);
+                  //   debugPrint('add time: ${update_queue[key]!.MemberId}in${update_queue[key]!.Date}');
+                  // } else {
+                  //   updatetime(update_queue[key]!);
+                  //   debugPrint('update time: ${update_queue[key]!.MemberId}in${update_queue[key]!.Date}');
+                  // }
+                }
+                update_queue.clear();
+              });
               Navigator.pop(context);
             },
             child: const Text(
@@ -159,5 +178,28 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
         ],
       ),
     );
+  }
+
+  void update(WorkSheet addk) async {
+    final getlist = await SheetDB.getsheet(addk.MemberId, addk.Date, Sheetdb);
+    setState(() {
+      // rec = getlist;
+      debugPrint('有沒有找到? ${getlist.isNotEmpty}');
+      if (getlist.isEmpty) {
+        addtime(addk);
+        debugPrint('add time: ${addk.MemberId} in ${addk.Date}');
+      } else {
+        updatetime(addk);
+        debugPrint('update time: ${addk.MemberId} in ${addk.Date}');
+      }
+    });
+  }
+
+  void addtime(WorkSheet addk) async {
+    await SheetDB.AddWorkTime(addk, Sheetdb);
+  }
+
+  void updatetime(WorkSheet addk) async {
+    await SheetDB.updateSheet(addk, Sheetdb);
   }
 }

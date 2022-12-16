@@ -58,7 +58,7 @@ class _ChoiceChipDemoState extends State<ChoiceChipDemo> with RestorationMixin {
           selected: _indexSelected.value == 0,
           onSelected: (value) {
             setState(() {
-              ButtonState = value ? 1 : -1;
+              ButtonState = value ? 2 : 0;
               isPressed2 = true;
               isPressed1 = value ? false : true;
               _indexSelected.value = value ? 0 : -1;
@@ -92,7 +92,7 @@ class _ChoiceChipDemoState extends State<ChoiceChipDemo> with RestorationMixin {
           selected: _indexSelected.value == 1,
           onSelected: (value) {
             setState(() {
-              ButtonState = value ? 2 : -1;
+              ButtonState = value ? 1 : 0;
               isPressed1 = true;
               isPressed2 = value ? false : true;
               _indexSelected.value = value ? 1 : -1;
