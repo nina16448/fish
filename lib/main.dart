@@ -17,7 +17,6 @@ import 'dart:async';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Future<Database> Crewdb = CrewDB.getDB();
   runApp(MyApp());
 }
 
@@ -34,14 +33,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           fontFamily: 'GenJyuu',
           pageTransitionsTheme: const PageTransitionsTheme(builders: {
-            TargetPlatform.windows: SharedAxisPageTransitionsBuilder(
-                transitionType: SharedAxisTransitionType.horizontal),
-            TargetPlatform.android: SharedAxisPageTransitionsBuilder(
-                transitionType: SharedAxisTransitionType.horizontal),
-            TargetPlatform.iOS: SharedAxisPageTransitionsBuilder(
-                transitionType: SharedAxisTransitionType.horizontal),
-            TargetPlatform.macOS: SharedAxisPageTransitionsBuilder(
-                transitionType: SharedAxisTransitionType.horizontal),
+            TargetPlatform.windows: SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.horizontal),
+            TargetPlatform.android: SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.horizontal),
+            TargetPlatform.iOS: SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.horizontal),
+            TargetPlatform.macOS: SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.horizontal),
           })), //字體
       routes: {
         '/': (context) => const HomePage(), //首頁

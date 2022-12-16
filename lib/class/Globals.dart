@@ -13,6 +13,19 @@ bool checkState = false;
 
 var update_queue = Map<String, WorkSheet>();
 
+class Timelist {
+  Timelist(
+    this.state,
+    this.stTime,
+    this.endTime,
+    this.dura,
+  );
+  int state; // 0是吃飯，1是工作
+  String stTime;
+  String endTime;
+  String dura;
+}
+
 DateTime currentTime = DateTime.now();
 DateTime aTime = DateTime.now();
 int prev = 1000;
@@ -26,40 +39,71 @@ Member now_login = Member(
   Wplace: '',
 );
 
-class Timelist {
-  Timelist(
-    this.state,
-    this.stTime,
-    this.endTime,
-  );
-  int state; // 0是吃飯，1是工作
-  DateTime stTime;
-  DateTime endTime;
-}
+List<String> numtoTime = [
+  '00:00',
+  '00:30',
+  '01:00',
+  '01:30',
+  '02:00',
+  '02:30',
+  '03:00',
+  '03:30',
+  '04:00',
+  '04:30',
+  '05:00',
+  '05:30',
+  '06:00',
+  '06:30',
+  '07:00',
+  '07:30',
+  '08:00',
+  '08:30',
+  '09:00',
+  '09:30',
+  '10:00',
+  '10:30',
+  '11:00',
+  '11:30',
+  '12:00',
+  '12:30',
+  '13:00',
+  '13:30',
+  '14:00',
+  '14:30',
+  '15:00',
+  '15:30',
+  '16:00',
+  '16:30',
+  '17:00',
+  '17:30',
+  '18:00',
+  '18:30',
+  '19:00',
+  '19:30',
+  '20:00',
+  '20:30',
+  '21:00',
+  '21:30',
+  '22:00',
+  '22:30',
+  '23:00',
+  '23:30'
+];
 
 ///範例///
-List<Timelist> getunconfirmed() {
-  return [
-    Timelist(1, DateTime.utc(2022, 11, 28, 06, 00),
-        DateTime.utc(2022, 11, 28, 7, 0)),
-    Timelist(
-        0, DateTime.utc(2022, 11, 28, 7, 0), DateTime.utc(2022, 11, 28, 7, 30)),
-    Timelist(
-        1, DateTime.utc(2022, 11, 28, 7, 30), DateTime.utc(2022, 11, 28, 8, 0)),
-    Timelist(1, DateTime.utc(2022, 11, 28, 11, 0),
-        DateTime.utc(2022, 11, 28, 12, 0)),
-    Timelist(0, DateTime.utc(2022, 11, 28, 12, 0),
-        DateTime.utc(2022, 11, 28, 12, 30)),
-    Timelist(1, DateTime.utc(2022, 11, 28, 12, 30),
-        DateTime.utc(2022, 11, 28, 13, 0)),
-    Timelist(1, DateTime.utc(2022, 11, 28, 16, 0),
-        DateTime.utc(2022, 11, 28, 17, 0)),
-    Timelist(0, DateTime.utc(2022, 11, 28, 17, 0),
-        DateTime.utc(2022, 11, 28, 17, 30)),
-    Timelist(1, DateTime.utc(2022, 11, 28, 17, 30),
-        DateTime.utc(2022, 11, 28, 18, 0)),
-  ];
-}
+// List<Timelist> getunconfirmed() {
+//   return [
+//     Timelist(1, DateTime.utc(2022, 11, 28, 06, 00), DateTime.utc(2022, 11, 28, 7, 0)),
+//     Timelist(0, DateTime.utc(2022, 11, 28, 7, 0), DateTime.utc(2022, 11, 28, 7, 30)),
+//     Timelist(1, DateTime.utc(2022, 11, 28, 7, 30), DateTime.utc(2022, 11, 28, 8, 0)),
+//     Timelist(1, DateTime.utc(2022, 11, 28, 11, 0), DateTime.utc(2022, 11, 28, 12, 0)),
+//     Timelist(0, DateTime.utc(2022, 11, 28, 12, 0), DateTime.utc(2022, 11, 28, 12, 30)),
+//     Timelist(1, DateTime.utc(2022, 11, 28, 12, 30), DateTime.utc(2022, 11, 28, 13, 0)),
+//     Timelist(1, DateTime.utc(2022, 11, 28, 16, 0), DateTime.utc(2022, 11, 28, 17, 0)),
+//     Timelist(0, DateTime.utc(2022, 11, 28, 17, 0), DateTime.utc(2022, 11, 28, 17, 30)),
+//     Timelist(1, DateTime.utc(2022, 11, 28, 17, 30), DateTime.utc(2022, 11, 28, 18, 0)),
+//   ];
+// }
 
 class Namelist {
   Namelist(this.title, [this.isExpanded = false]);
@@ -97,6 +141,7 @@ class Namelist {
 // }
 Future<Database> Crewdb = CrewDB.getDB();
 Future<Database> Sheetdb = SheetDB.getDB();
+Future<Database> Warningdb = WarningDB.getDB();
 
 List<int> initlist() {
   return List<int>.generate(48, (int index) => 0, growable: false);

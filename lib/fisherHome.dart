@@ -17,6 +17,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
 
+
+
 class FisherHome extends StatefulWidget {
   const FisherHome({Key? key}) : super(key: key);
 
@@ -30,24 +32,34 @@ class _FisherHomeState extends State<FisherHome> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   // final GlobalKey<StepsState> _key = GlobalKey();
   final PageController controller = PageController(initialPage: 1000);
-  List<Member> searchList = [];
-
-  // void getData() async {
-  //   searchList = await CrewDB.getMember(Crewdb);
-  // }
-
+  // List<Member> searchList = [];
   NavigationRailLabelType labelType = NavigationRailLabelType.all;
   bool showLeading = false;
   bool showTrailing = false;
   double groupAligment = -1.0;
   Member now = now_login;
   int? _timerange = 0;
-  List<Timelist> localtimelist = getunconfirmed();
 
+  // List<Timelist> localtimelist = [];
+  Timelist localtime = Timelist(0, '', '');
   int? _value = 0;
   List<int> isChecked = [];
+  var showout = Map<String, List<Timelist>>();
+
+  void initList() async {
+    final list = await SheetDB.getsheetwithstate(now.Id, 0, Sheetdb);
+
+    setState(() {
+
+    });
+  }
 
   @override
+  void initState() {
+    super.initState();
+    initList();
+  }
+
   Widget build(BuildContext context) {
     return Container(
       //主體是Container
@@ -108,8 +120,7 @@ class _FisherHomeState extends State<FisherHome> {
         ),
         Expanded(
             child: ListView.builder(
-          padding:
-              const EdgeInsets.only(top: 0, right: 10, bottom: 100, left: 10),
+          padding: const EdgeInsets.only(top: 0, right: 10, bottom: 100, left: 10),
           itemBuilder: (BuildContext context, int index) => Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3),
             child: _timeoutcard(index),
@@ -133,8 +144,7 @@ class _FisherHomeState extends State<FisherHome> {
           color: Color.fromARGB(255, 226, 67, 67),
         ),
         title: Text(
-          formatDate(
-              nowT, [yyyy, '/', mm, '/', dd, '           連續休息時間少於10小時！']),
+          formatDate(nowT, [yyyy, '/', mm, '/', dd, '           連續休息時間少於10小時！']),
           style: TextStyle(
             color: Color.fromARGB(255, 82, 82, 82),
             fontSize: 20.0,
@@ -177,9 +187,7 @@ class _FisherHomeState extends State<FisherHome> {
   }
 
   Widget _buildTiles(int index, int state) {
-    var nowT = localtimelist[0]
-        .stTime
-        .subtract(Duration(days: (index + (state + 3) * (state + 1))));
+    var nowT = localtimelist[0].stTime.subtract(Duration(days: (index + (state + 3) * (state + 1))));
     return ExpansionTile(
       key: PageStorageKey<int>(index + (state + 3) * (state + 1)),
       initiallyExpanded: (state == 0),
@@ -239,14 +247,8 @@ class _FisherHomeState extends State<FisherHome> {
             ),
             child: Row(children: [
               (localtimelist[ID].state == 0)
-                  ? const Icon(
-                      size: 30,
-                      color: Color.fromARGB(255, 142, 160, 197),
-                      Icons.local_dining)
-                  : const Icon(
-                      size: 30,
-                      color: Color.fromARGB(255, 44, 84, 121),
-                      FontAwesome5.fish),
+                  ? const Icon(size: 30, color: Color.fromARGB(255, 142, 160, 197), Icons.local_dining)
+                  : const Icon(size: 30, color: Color.fromARGB(255, 44, 84, 121), FontAwesome5.fish),
               const SizedBox(
                 width: 15,
               ),
@@ -565,17 +567,13 @@ class _FisherHomeState extends State<FisherHome> {
       avatar: Icon(
         size: 40,
         Icons.person,
-        color: (_value == 0)
-            ? Color.fromARGB(255, 81, 105, 162)
-            : Color.fromARGB(255, 255, 255, 255),
+        color: (_value == 0) ? Color.fromARGB(255, 81, 105, 162) : Color.fromARGB(255, 255, 255, 255),
       ),
       label: Text(
         '個人頁面',
         style: TextStyle(
           fontSize: 22,
-          color: (_value == 0)
-              ? Color.fromARGB(255, 81, 105, 162)
-              : Color.fromARGB(255, 255, 255, 255),
+          color: (_value == 0) ? Color.fromARGB(255, 81, 105, 162) : Color.fromARGB(255, 255, 255, 255),
         ),
       ),
       selected: _value == 0,
@@ -604,17 +602,13 @@ class _FisherHomeState extends State<FisherHome> {
       avatar: Icon(
         size: 40,
         Icons.notifications,
-        color: (_value == 1)
-            ? Color.fromARGB(255, 81, 105, 162)
-            : Color.fromARGB(255, 255, 255, 255),
+        color: (_value == 1) ? Color.fromARGB(255, 81, 105, 162) : Color.fromARGB(255, 255, 255, 255),
       ),
       label: Text(
         '超時紀錄',
         style: TextStyle(
           fontSize: 22,
-          color: (_value == 1)
-              ? Color.fromARGB(255, 81, 105, 162)
-              : Color.fromARGB(255, 255, 255, 255),
+          color: (_value == 1) ? Color.fromARGB(255, 81, 105, 162) : Color.fromARGB(255, 255, 255, 255),
         ),
       ),
       selected: _value == 1,
@@ -679,13 +673,29 @@ class _FisherHomeState extends State<FisherHome> {
                 ),
                 Text(
                   '#${now.Id}',
-                  style: const TextStyle(
-                      fontSize: 16.0,
-                      color: Color.fromARGB(255, 226, 242, 255)),
+                  style: const TextStyle(fontSize: 16.0, color: Color.fromARGB(255, 226, 242, 255)),
                 ),
               ],
             )
           ],
         ));
+  }
+
+  void getstateList() async {
+    final list = await SheetDB.getsheetwithstate(now.Id, 0, Sheetdb);
+
+    setState(() {});
+  }
+
+  void getmonthList() async {
+    final list = await SheetDB.getsheetwithstate(now.Id, 0, Sheetdb);
+
+    setState(() {});
+  }
+
+  void getweekList() async {
+    final list = await SheetDB.getsheetwithstate(now.Id, 0, Sheetdb);
+
+    setState(() {});
   }
 }

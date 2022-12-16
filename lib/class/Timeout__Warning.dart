@@ -2,23 +2,17 @@ import 'dart:math';
 import 'Globals.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import '../database/database.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
+import 'dart:typed_data';
 
-class Notice {
-  Notice(this.title, this.body, [this.isExpanded = false]);
-  String title;
-  List<String> body;
+class datelimit {
+  datelimit(this.Date, this.member, [this.isExpanded = false]);
+  String Date;
+  List<String> member;
   bool isExpanded;
-}
-
-List<Notice> getListw() {
-  return [
-    Notice('12/3 超時通知', ['徐濤', '鮑景利']),
-    Notice('11/6 超時通知', ['李建偉']),
-    Notice('11/5 超時通知', ['李建偉']),
-    Notice('11/4 超時通知', ['李建偉']),
-    Notice('11/3 超時通知', ['李建偉']),
-    Notice('11/2 超時通知', ['李建偉']),
-  ];
 }
 
 class TimeList extends StatefulWidget {
@@ -29,53 +23,37 @@ class TimeList extends StatefulWidget {
 }
 
 class _TimeList extends State<TimeList> {
-  final List<Notice> _notices = getListw();
-  @override
-  Widget build(BuildContext context) {
-    return gaplist();
-    // ListView(
-    //   shrinkWrap: true,
-    //   padding: const EdgeInsets.only(top: 0, right: 20, bottom: 50),
-    //   children: <Widget>[
-    //     _noticelist(),
-    //   ],
-    // );
+  List<datelimit> notices = [];
+  var rec = Map<String, List<String>>();
+  datelimit tmp = datelimit('', []);
+
+  void initList() async {
+    final list = await WarningDB.getRecord('All', Warningdb);
+    setState(() {
+      for (int i = 0; i < list.length; i++) {
+        if (rec[list[i].Date] == null) {
+          rec[list[i].Date] = [];
+        }
+
+        rec[list[i].Date]!.add(list[i].Name);
+      }
+      for (var key in rec.keys) {
+        tmp.Date = key;
+        tmp.member = rec[key]!;
+        notices.add(tmp);
+      }
+    });
   }
 
-  // Widget _noticelist() {
-  //   return ExpansionPanelList(
-  //     expandedHeaderPadding: const EdgeInsets.only(bottom: 0),
-  //     expansionCallback: (int index, bool isExpanded) {
-  //       setState(() {
-  //         _notices[index].isExpanded = !isExpanded;
-  //       });
-  //     },
-  //     children: _notices.map<ExpansionPanel>((Notice notic) {
-  //       return ExpansionPanel(
-  //         headerBuilder: (BuildContext context, bool isExpanded) {
-  //           return ListTile(
-  //             subtitle: Text('共${notic.body.length}筆'),
-  //             leading: Icon(
-  //               Icons.warning,
-  //               color: Color.fromARGB(255, 226, 67, 67),
-  //             ),
-  //             title: Text(
-  //               notic.title,
-  //               style: TextStyle(
-  //                 color: Color.fromARGB(255, 82, 82, 82),
-  //                 fontSize: 20.0,
-  //               ),
-  //             ),
-  //           );
-  //         },
-  //         body: Container(
-  //           child: strlist(notic.body),
-  //         ),
-  //         isExpanded: notic.isExpanded,
-  //       );
-  //     }).toList(),
-  //   );
-  // }
+  @override
+  void initState() {
+    super.initState();
+    initList();
+  }
+
+  Widget build(BuildContext context) {
+    return gaplist();
+  }
 
   Widget strlist(List<String> s) {
     return Column(
@@ -83,7 +61,13 @@ class _TimeList extends State<TimeList> {
         s.length,
         (idx) {
           return ListTile(
-            title: Text(s[idx]),
+            title: Text(
+              s[idx],
+              style: const TextStyle(
+                color: Color.fromARGB(255, 82, 82, 82),
+                fontSize: 23.0,
+              ),
+            ),
           );
         },
       ).toList(),
@@ -95,31 +79,38 @@ class _TimeList extends State<TimeList> {
       padding: const EdgeInsets.all(10),
       itemBuilder: (BuildContext context, int index) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: _buildTiles(_notices[index]),
+        child: _buildTiles(notices[index]),
       ),
-      itemCount: _notices.length,
+      itemCount: notices.length,
     );
   }
 
-  Widget _buildTiles(Notice notic) {
+  Widget _buildTiles(datelimit notic) {
     // if (root.children.isEmpty) return ListTile(title: Text(root.title));
     return Card(
       child: ExpansionTile(
-        subtitle: Text('共${notic.body.length}筆'),
-        leading: Icon(
+        tilePadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+        subtitle: Text(
+          '共${notic.member.length}筆',
+          style: const TextStyle(
+            fontSize: 16.0,
+          ),
+        ),
+        leading: const Icon(
+          size: 40,
           Icons.warning,
           color: Color.fromARGB(255, 226, 67, 67),
         ),
-        key: PageStorageKey<Notice>(notic),
+        key: PageStorageKey<datelimit>(notic),
         title: Text(
-          notic.title,
-          style: TextStyle(
+          notic.Date,
+          style: const TextStyle(
             color: Color.fromARGB(255, 82, 82, 82),
-            fontSize: 18.0,
+            fontSize: 23.0,
           ),
         ),
         children: [
-          strlist(notic.body),
+          strlist(notic.member),
         ],
       ),
     );

@@ -4,6 +4,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'dart:typed_data';
 import 'dart:async';
+import '../class/Globals.dart';
+import 'package:codec/codec.dart';
 
 //成員
 class Member {
@@ -62,11 +64,32 @@ class WorkSheet {
   }
 }
 
+class WorkTime {
+  int SheetId;
+  String MemberId;
+  List<Timelist> Datalist;
+
+  WorkTime({required this.SheetId, required this.MemberId, required this.Datalist});
+  Map<String, dynamic> toMap() {
+    return {
+      'SheetId': SheetId,
+      'MemberId': MemberId,
+      'Datalist': Datalist,
+    };
+  }
+
+  @override
+  String toString() {
+    String dataString = json.encode(data);
+    return "WorkTime{SheetId: $SheetId, MemberId: $MemberId, Sheet: $Str}";
+  }
+}
+
 class WarningRecord {
-  final int recId;
-  final String MemberId;
-  final String Name;
-  final String Date;
+  int recId;
+  String MemberId;
+  String Name;
+  String Date;
 
   WarningRecord({required this.recId, required this.MemberId, required this.Name, required this.Date});
 
@@ -175,22 +198,6 @@ class CrewDB {
 }
 
 class SheetDB {
-  // static Future<Database> getDB() async {
-  //   return openDatabase(
-  //     join(await getDatabasesPath(), 'Sheet.db'),
-  //     onCreate: (db, version) {
-  //       return db.execute(
-  //         'CREATE TABLE WorkSheet(SheetId INT PRIMARY KEY NOT NULL, MemberId TEXT, Date TEXT, Sheet BLOB )',
-  //       );
-  //     },
-  //     onUpgrade: (db, oldVersion, newVersion) {
-  //       return db.execute(
-  //         'ALTER TABLE WorkSheet DROP COLUMN State',
-  //       );
-  //     },
-  //     version: 4,
-  //   );
-  // }
   static Future<Database> getDB() async {
     return openDatabase(
       join(await getDatabasesPath(), 'SheetNew.db'),
@@ -220,6 +227,23 @@ class SheetDB {
     } else {
       maps = await db.rawQuery('SELECT * FROM WorkSheet WHERE MemberId = ? AND Date = ?', [id, date]);
     }
+    return List.generate(maps.length, (i) {
+      return WorkSheet(
+        SheetId: maps[i]['SheetId'],
+        MemberId: maps[i]['MemberId'],
+        Date: maps[i]['Date'],
+        State: maps[i]['State'],
+        Sheet: maps[i]['Sheet'],
+      );
+    });
+  }
+
+  static Future<List<WorkSheet>> getsheetwithstate(String id, int state, Future<Database> DB) async {
+    final db = await DB;
+    final List<Map<String, dynamic>> maps;
+
+    maps = await db.rawQuery('SELECT * FROM WorkSheet WHERE MemberId = ? AND State = ?', [id, state]);
+
     return List.generate(maps.length, (i) {
       return WorkSheet(
         SheetId: maps[i]['SheetId'],
@@ -285,6 +309,24 @@ class WarningDB {
     } else {
       maps = await db.rawQuery('SELECT * FROM WarningRec where Id = ?', [id]);
     }
+    // Convert the List<Map<String, dynamic> into a List<Dog>.
+    return List.generate(maps.length, (i) {
+      return WarningRecord(
+        recId: maps[i]['recId'],
+        MemberId: maps[i]['MemberId'],
+        Name: maps[i]['Name'],
+        Date: maps[i]['Date'],
+      );
+    });
+  }
+
+  static Future<List<WarningRecord>> getDateRecord(String date, Future<Database> DB) async {
+    final db = await DB;
+    // Query the table for all The Dogs.
+    final List<Map<String, dynamic>> maps;
+
+    maps = await db.rawQuery('SELECT * FROM WarningRec where Date = ?', [date]);
+
     // Convert the List<Map<String, dynamic> into a List<Dog>.
     return List.generate(maps.length, (i) {
       return WarningRecord(

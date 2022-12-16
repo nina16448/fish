@@ -41,11 +41,12 @@ class _TimeoutState extends State<Timeout> {
         ),
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          leadingWidth: 90,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           toolbarHeight: 100,
           leading: IconButton(
-            iconSize: 33.0,
+            iconSize: 40.0,
             icon: const Icon(
               Icons.menu,
               color: Color.fromARGB(255, 55, 81, 136),
@@ -61,8 +62,7 @@ class _TimeoutState extends State<Timeout> {
               GestureDetector(
                 child: Container(
                   padding: const EdgeInsets.only(
-                    bottom:
-                        2, // This can be the space you need between text and underline
+                    bottom: 2, // This can be the space you need between text and underline
                   ),
                   decoration: const BoxDecoration(
                       border: Border(
@@ -74,7 +74,7 @@ class _TimeoutState extends State<Timeout> {
                     '               超時紀錄',
                     style: TextStyle(
                       color: Color.fromARGB(255, 82, 82, 82),
-                      fontSize: 23.0,
+                      fontSize: 30.0,
                       // decoration: TextDecoration.underline,
                     ),
                   ),
