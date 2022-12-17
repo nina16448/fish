@@ -142,7 +142,7 @@ class MyTableButtonState extends State<MyTable> {
                                     width: 20,
                                   ),
                                   Text(
-                                    (tabledata.State == 0) ? '未選擇登記狀態，請選擇工作/用餐' : '已確認工時，無法更動',
+                                    (tabledata.State == 0) ? '未選擇登記狀態，請選擇工作/用餐' : '工時已確認，無法進行更動',
                                     style: const TextStyle(
                                       fontFamily: 'GenJyuu',
                                       fontWeight: FontWeight.bold,

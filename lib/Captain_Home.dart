@@ -85,8 +85,7 @@ class _Captain_HomeState extends State<Captain_Home> {
                 child: Container(
                   padding: const EdgeInsets.only(
                     top: 10,
-                    bottom:
-                        2, // This can be the space you need between text and underline
+                    bottom: 2, // This can be the space you need between text and underline
                   ),
                   decoration: const BoxDecoration(
                       border: Border(
@@ -133,10 +132,8 @@ class _Captain_HomeState extends State<Captain_Home> {
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(25.7),
                     ),
-                    labelStyle: const TextStyle(
-                        color: Color.fromARGB(255, 126, 126, 126)),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
+                    labelStyle: const TextStyle(color: Color.fromARGB(255, 126, 126, 126)),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     filled: true,
                     fillColor: const Color.fromARGB(255, 255, 255, 255),
                     focusColor: const Color.fromARGB(255, 255, 255, 255),
@@ -162,73 +159,70 @@ class _Captain_HomeState extends State<Captain_Home> {
               const SizedBox(
                 height: 20,
               ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 20,
-                    ),
-                    ChoiceChipDemo(), //工作與用餐按鈕
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                if (prev == -1) prev = 1000;
-                                // aTime = aTime.subtract(const Duration(days: 1));
-                                controller.previousPage(
-                                  duration: Duration(milliseconds: 350),
-                                  curve: Curves.easeInOut,
-                                );
-                              });
-                            },
-                            iconSize: 30,
-                            icon: Icon(Icons.chevron_left),
-                            color: Color.fromARGB(255, 82, 82, 82),
-                          ),
-                          CupertinoButton(
-                            child: Text(
-                              '${aTime.year}/${aTime.month}/${aTime.day}',
-                              style: const TextStyle(
-                                color: Color.fromARGB(255, 82, 82, 82),
-                                fontSize: 20.0,
-                                // decoration: TextDecoration.underline,
-                              ),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                prev = -1;
-                                controller.animateToPage(
-                                  1000,
-                                  duration: Duration(milliseconds: 380),
-                                  curve: Curves.easeInOut,
-                                );
-                                aTime = currentTime;
-                              });
-                            },
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                if (prev == -1) prev = 1000;
-                                controller.nextPage(
-                                    duration: Duration(milliseconds: 350),
-                                    curve: Curves.easeIn);
-                                // aTime = aTime.add(const Duration(days: 1));
-                              });
-                            },
-                            iconSize: 30,
-                            icon: Icon(Icons.chevron_right),
-                            color: Color.fromARGB(255, 82, 82, 82),
-                          ),
-                        ],
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
+                SizedBox(
+                  width: 20,
+                ),
+                ChoiceChipDemo(), //工作與用餐按鈕
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (prev == -1) prev = 1000;
+                            // aTime = aTime.subtract(const Duration(days: 1));
+                            controller.previousPage(
+                              duration: Duration(milliseconds: 350),
+                              curve: Curves.easeInOut,
+                            );
+                          });
+                        },
+                        iconSize: 30,
+                        icon: Icon(Icons.chevron_left),
+                        color: Color.fromARGB(255, 82, 82, 82),
                       ),
-                    ),
+                      CupertinoButton(
+                        child: Text(
+                          '${aTime.year}/${aTime.month}/${aTime.day}',
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 82, 82, 82),
+                            fontSize: 20.0,
+                            // decoration: TextDecoration.underline,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            prev = -1;
+                            controller.animateToPage(
+                              1000,
+                              duration: Duration(milliseconds: 380),
+                              curve: Curves.easeInOut,
+                            );
+                            aTime = currentTime;
+                          });
+                        },
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (prev == -1) prev = 1000;
+                            controller.nextPage(duration: Duration(milliseconds: 350), curve: Curves.easeIn);
 
-                    FMCupertinoButtonVC(),
-                  ]),
+                            // aTime = aTime.add(const Duration(days: 1));
+                          });
+                        },
+                        iconSize: 30,
+                        icon: Icon(Icons.chevron_right),
+                        color: Color.fromARGB(255, 82, 82, 82),
+                      ),
+                    ],
+                  ),
+                ),
+
+                FMCupertinoButtonVC(),
+              ]),
               const SizedBox(
                 height: 10.0,
               ),
@@ -249,11 +243,11 @@ class _Captain_HomeState extends State<Captain_Home> {
   Widget _pagechange() {
     return PageView.builder(
       controller: controller,
-      // itemCount: 1000,
+      itemCount: 1001,
       itemBuilder: (context, index) {
         return Steps(
           namelist: searchList,
-          nowlist: aTime,
+          nowlist: currentTime.subtract(Duration(days: (1000 - index))),
         );
       },
       onPageChanged: (int page) {

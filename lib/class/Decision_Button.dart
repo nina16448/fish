@@ -238,6 +238,18 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
         section.dura = 0;
         section.stTime = 'init';
       }
+      if (i == (addk.Sheet.length - 1)) {
+        section.endTime = numtoTime[i + 1];
+        if (addk.Sheet[i] != 0 && section.state != 0) {
+          section.dura += 0.5;
+          section.state = addk.Sheet[i];
+          debugPrint('加之前陣列:S${datalist.toString()}');
+          datalist.add(Timelist(section.state, section.stTime, section.endTime, section.dura));
+          debugPrint('新增時間段: ${section.toString()}');
+          debugPrint('陣列:S${datalist.toString()}');
+        }
+      }
+
       // }
       section.state = addk.Sheet[i];
       section.dura += 0.5;

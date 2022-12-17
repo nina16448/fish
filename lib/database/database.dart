@@ -258,10 +258,10 @@ class WarningDB {
   //取得資料庫
   static Future<Database> getDB() async {
     return openDatabase(
-      join(await getDatabasesPath(), 'Warning.db'),
+      join(await getDatabasesPath(), 'Warninggg.db'),
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE WarningRec(recId TEXT PRIMARY KEY, MemberId TEXT, Name TEXT, Date TEXT)',
+          'CREATE TABLE WarningRec(recId INT PRIMARY KEY, MemberId TEXT, Name TEXT, Date TEXT)',
         );
       },
       version: 1,
@@ -286,7 +286,7 @@ class WarningDB {
     if (id == 'All') {
       maps = await db.query('WarningRec');
     } else {
-      maps = await db.rawQuery('SELECT * FROM WarningRec where Id = ?', [id]);
+      maps = await db.rawQuery('SELECT * FROM WarningRec where MemberId = ?', [id]);
     }
     // Convert the List<Map<String, dynamic> into a List<Dog>.
     return List.generate(maps.length, (i) {
@@ -344,7 +344,13 @@ class WorkTime {
   String Datalist;
   int State;
 
-  WorkTime({required this.SheetId, required this.MemberId, required this.Date, required this.Datalist, required this.State});
+  WorkTime({
+    required this.SheetId,
+    required this.MemberId,
+    required this.Date,
+    required this.Datalist,
+    required this.State,
+  });
   Map<String, dynamic> toMap() {
     return {
       'SheetId': SheetId,
@@ -409,6 +415,44 @@ class WorkTimeDB {
       maps = await db.rawQuery('SELECT * FROM WorkTime');
     } else {
       maps = await db.rawQuery('SELECT * FROM WorkTime WHERE MemberId = ? AND State = ?', [id, state]);
+    }
+    return List.generate(maps.length, (i) {
+      return WorkTime(
+        SheetId: maps[i]['SheetId'],
+        MemberId: maps[i]['MemberId'],
+        Date: maps[i]['Date'],
+        Datalist: maps[i]['Datalist'],
+        State: maps[i]['State'],
+      );
+    });
+  }
+
+  static Future<List<WorkTime>> getmonthheet(String id, String s, String end, Future<Database> DB) async {
+    final db = await DB;
+    final List<Map<String, dynamic>> maps;
+    if (id == 'All') {
+      maps = await db.rawQuery('SELECT * FROM WorkTime');
+    } else {
+      maps = await db.rawQuery('SELECT * FROM WorkTime WHERE MemberId = ? AND Date BETWEEN ? AND ?', [id, s, end]);
+    }
+    return List.generate(maps.length, (i) {
+      return WorkTime(
+        SheetId: maps[i]['SheetId'],
+        MemberId: maps[i]['MemberId'],
+        Date: maps[i]['Date'],
+        Datalist: maps[i]['Datalist'],
+        State: maps[i]['State'],
+      );
+    });
+  }
+
+  static Future<List<WorkTime>> getwhosheet(String id, Future<Database> DB) async {
+    final db = await DB;
+    final List<Map<String, dynamic>> maps;
+    if (id == 'All') {
+      maps = await db.rawQuery('SELECT * FROM WorkTime');
+    } else {
+      maps = await db.rawQuery('SELECT * FROM WorkTime WHERE MemberId = ? ', [id]);
     }
     return List.generate(maps.length, (i) {
       return WorkTime(

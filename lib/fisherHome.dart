@@ -30,9 +30,11 @@ class FisherHome extends StatefulWidget {
 class datel {
   datel({
     required this.date,
+    required this.cost,
     required this.sheet,
   });
   String date;
+  double cost;
   List<Timelist> sheet;
 }
 
@@ -56,29 +58,43 @@ class _FisherHomeState extends State<FisherHome> {
   int? _value = 0;
   List<int> isChecked = [];
   List<datel> showout = [];
+  List<String> queue = [];
+  List<WarningRecord> locallimit = [];
+  double recnum = 0.0;
 
   void initList() async {
     final list = await WorkTimeDB.getstatesheet(now.Id, 0, WorkTimedb);
-
+    final lim = await WarningDB.getRecord(now.Id, Warningdb);
+    recnum = 0.0;
     setState(() {
+      locallimit = lim;
       for (int i = 0; i < list.length; i++) {
+        recnum = 0.0;
         recmap = jsonDecode(list[i].Datalist);
         localtime = List<Timelist>.from(recmap.map((e) => Timelist.fromJson(e)));
+
+        for (var x in localtime) {
+          if (x.state == 2) recnum += x.dura;
+        }
+
         showout.add(
           datel(
             date: list[i].Date,
+            cost: recnum,
             sheet: localtime,
           ),
         );
       }
     });
+    showout.sort((a, b) => b.date.compareTo(a.date));
   }
 
   @override
   void initState() {
     super.initState();
     initList();
-    showout.sort((a, b) => a.date.compareTo(b.date));
+    showout.sort((a, b) => b.date.compareTo(a.date));
+    debugPrint('init');
   }
 
   Widget build(BuildContext context) {
@@ -146,7 +162,7 @@ class _FisherHomeState extends State<FisherHome> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3),
             child: _timeoutcard(index),
           ),
-          itemCount: 15,
+          itemCount: locallimit.length,
         )),
         SizedBox(
           height: 50,
@@ -165,7 +181,7 @@ class _FisherHomeState extends State<FisherHome> {
           color: Color.fromARGB(255, 226, 67, 67),
         ),
         title: Text(
-          '           連續休息時間少於10小時！',
+          '${locallimit[index].Date}           連續休息時間少於10小時！',
           style: TextStyle(
             color: Color.fromARGB(255, 82, 82, 82),
             fontSize: 20.0,
@@ -210,6 +226,7 @@ class _FisherHomeState extends State<FisherHome> {
   Widget _buildTiles(int index, int state) {
     var nowT = showout[index].date;
     return ExpansionTile(
+      subtitle: Text('共 ${showout[index].cost} 小時'),
       key: PageStorageKey<int>(index),
       initiallyExpanded: true,
       // tilePadding: EdgeInsets.fromLTRB(0, 0, 458, 0),
@@ -226,8 +243,10 @@ class _FisherHomeState extends State<FisherHome> {
                 setState(() {
                   if (value == true) {
                     isChecked.add(index);
+                    queue.add(showout[index].date);
                   } else {
                     isChecked.remove(index);
+                    queue.remove(showout[index].date);
                   }
                 });
               },
@@ -383,9 +402,13 @@ class _FisherHomeState extends State<FisherHome> {
           selected: _timerange == 0,
           onSelected: (value) {
             setState(() {
+              showout.clear();
+              getstateList();
               isChecked.clear();
               _timerange = 0;
+              // showout.sort((a, b) => b.date.compareTo(a.date));
             });
+            // showout.sort((a, b) => b.date.compareTo(a.date));
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -413,8 +436,11 @@ class _FisherHomeState extends State<FisherHome> {
           selected: _timerange == 2,
           onSelected: (value) {
             setState(() {
+              showout.clear();
+              getmonthList();
               isChecked.clear();
               _timerange = 2;
+              // showout.sort((a, b) => b.date.compareTo(a.date));
             });
           },
           shape: RoundedRectangleBorder(
@@ -424,14 +450,14 @@ class _FisherHomeState extends State<FisherHome> {
         ChoiceChip(
           label: (_timerange == 1)
               ? const Text(
-                  '本週',
+                  '全部',
                   style: TextStyle(
                     color: Color.fromARGB(255, 255, 255, 255),
                     fontSize: 22,
                   ),
                 )
               : const Text(
-                  '本週',
+                  '全部',
                   style: TextStyle(
                     color: Color.fromARGB(255, 135, 168, 202),
                     fontSize: 22,
@@ -443,8 +469,11 @@ class _FisherHomeState extends State<FisherHome> {
           selected: _timerange == 1,
           onSelected: (value) {
             setState(() {
+              showout.clear();
+              getallList();
               isChecked.clear();
               _timerange = 1;
+              // showout.sort((a, b) => b.date.compareTo(a.date));
             });
           },
           shape: RoundedRectangleBorder(
@@ -525,15 +554,19 @@ class _FisherHomeState extends State<FisherHome> {
             ),
           ),
           CupertinoDialogAction(
-            /// This parameter indicates the action would perform
-            /// a destructive action such as deletion, and turns
-            /// the action's text color to red.
             isDestructiveAction: true,
             onPressed: () {
+              for (var key in queue) {
+                cheaktime(key);
+              }
               setState(() {
                 isChecked.clear();
+                queue.clear();
+                showout.clear();
+                updlimit();
+                getstateList();
+                showout.sort((a, b) => b.date.compareTo(a.date));
               });
-
               Navigator.pop(context);
             },
             child: const Text(
@@ -639,6 +672,7 @@ class _FisherHomeState extends State<FisherHome> {
       onSelected: (bool selected) {
         print(selected);
         setState(() {
+          updlimit();
           _value = 1;
         });
       },
@@ -703,20 +737,126 @@ class _FisherHomeState extends State<FisherHome> {
   }
 
   void getstateList() async {
-    final list = await SheetDB.getsheetwithstate(now.Id, 0, Sheetdb);
+    final list = await WorkTimeDB.getstatesheet(now.Id, 0, WorkTimedb);
+    recnum = 0.0;
 
-    setState(() {});
+    setState(() {
+      for (int i = 0; i < list.length; i++) {
+        recnum = 0.0;
+        recmap = jsonDecode(list[i].Datalist);
+        localtime = List<Timelist>.from(recmap.map((e) => Timelist.fromJson(e)));
+        for (var x in localtime) {
+          if (x.state == 2) recnum += x.dura;
+        }
+
+        showout.add(
+          datel(
+            date: list[i].Date,
+            cost: recnum,
+            sheet: localtime,
+          ),
+        );
+      }
+    });
+    showout.sort((a, b) => b.date.compareTo(a.date));
   }
 
   void getmonthList() async {
-    final list = await SheetDB.getsheetwithstate(now.Id, 0, Sheetdb);
+    final time = DateTime.now();
+    final list = await WorkTimeDB.getmonthheet(now.Id, formatDate(time, [yyyy, '/', mm, '/00']), formatDate(time, [yyyy, '/', mm, '/32']), WorkTimedb);
+    recnum = 0.0;
+    setState(() {
+      for (int i = 0; i < list.length; i++) {
+        recnum = 0.0;
+        recmap = jsonDecode(list[i].Datalist);
+        localtime = List<Timelist>.from(recmap.map((e) => Timelist.fromJson(e)));
+        for (var x in localtime) {
+          if (x.state == 2) recnum += x.dura;
+        }
 
-    setState(() {});
+        showout.add(
+          datel(
+            date: list[i].Date,
+            cost: recnum,
+            sheet: localtime,
+          ),
+        );
+      }
+    });
+    showout.sort((a, b) => b.date.compareTo(a.date));
   }
 
-  void getweekList() async {
-    final list = await SheetDB.getsheetwithstate(now.Id, 0, Sheetdb);
+  void getallList() async {
+    final list = await WorkTimeDB.getwhosheet(now.Id, WorkTimedb);
 
-    setState(() {});
+    setState(() {
+      for (int i = 0; i < list.length; i++) {
+        recnum = 0.0;
+        recmap = jsonDecode(list[i].Datalist);
+        localtime = List<Timelist>.from(recmap.map((e) => Timelist.fromJson(e)));
+        for (var x in localtime) {
+          if (x.state == 2) recnum += x.dura;
+        }
+
+        showout.add(
+          datel(
+            date: list[i].Date,
+            cost: recnum,
+            sheet: localtime,
+          ),
+        );
+        // showout.sort((a, b) => b.date.compareTo(a.date));
+      }
+    });
+    showout.sort((a, b) => b.date.compareTo(a.date));
+  }
+
+  void cheaktime(String date) async {
+    final list1 = await SheetDB.getsheet(now.Id, date, Sheetdb);
+    final list2 = await WorkTimeDB.getsheet(now.Id, date, WorkTimedb);
+    setState(() {
+      list1[0].State = 1;
+      list2[0].State = 1;
+      updatesheetstate(list1[0]);
+      updatetimestate(list2[0]);
+      debugPrint('更新狀態:${date}');
+      debugPrint('${list1[0].State}');
+      cheakforlimit(list1[0]);
+      showout.clear();
+      getstateList();
+    });
+  }
+
+  void updatesheetstate(WorkSheet addk) async {
+    await SheetDB.updateSheet(addk, Sheetdb);
+  }
+
+  void updatetimestate(WorkTime addk) async {
+    await WorkTimeDB.updateSheet(addk, WorkTimedb);
+  }
+
+  void cheakforlimit(WorkSheet addk) async {
+    int count = addk.Sheet.where((n) => n <= 1).length;
+    WarningRecord neww = WarningRecord(
+      recId: addk.SheetId,
+      MemberId: addk.MemberId,
+      Name: now.Name,
+      Date: addk.Date,
+    );
+
+    if (count <= 10) addforlimit(neww);
+  }
+
+  void addforlimit(WarningRecord addk) async {
+    await WarningDB.Addrecord(addk, Warningdb);
+    debugPrint('超時!!已新增超時時段 ${addk.Name} in ${addk.Date}');
+  }
+
+  void updlimit() async {
+    final lim = await WarningDB.getRecord(now.Id, Warningdb);
+    setState(() {
+      locallimit = lim;
+    });
+    locallimit.sort((a, b) => b.Date.compareTo(a.Date));
   }
 }
