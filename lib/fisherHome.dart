@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:animations/animations.dart';
+import 'package:fish/class/Timeout__Warning.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +20,20 @@ import 'package:sqflite/sqflite.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
 
-
-
 class FisherHome extends StatefulWidget {
   const FisherHome({Key? key}) : super(key: key);
 
   @override
   State<FisherHome> createState() => _FisherHomeState();
+}
+
+class datel {
+  datel({
+    required this.date,
+    required this.sheet,
+  });
+  String date;
+  List<Timelist> sheet;
 }
 
 // ignore: camel_case_types
@@ -41,16 +51,26 @@ class _FisherHomeState extends State<FisherHome> {
   int? _timerange = 0;
 
   // List<Timelist> localtimelist = [];
-  Timelist localtime = Timelist(0, '', '');
+  List<Timelist> localtime = [];
+  List<dynamic> recmap = [];
   int? _value = 0;
   List<int> isChecked = [];
-  var showout = Map<String, List<Timelist>>();
+  List<datel> showout = [];
 
   void initList() async {
-    final list = await SheetDB.getsheetwithstate(now.Id, 0, Sheetdb);
+    final list = await WorkTimeDB.getstatesheet(now.Id, 0, WorkTimedb);
 
     setState(() {
-
+      for (int i = 0; i < list.length; i++) {
+        recmap = jsonDecode(list[i].Datalist);
+        localtime = List<Timelist>.from(recmap.map((e) => Timelist.fromJson(e)));
+        showout.add(
+          datel(
+            date: list[i].Date,
+            sheet: localtime,
+          ),
+        );
+      }
     });
   }
 
@@ -58,6 +78,7 @@ class _FisherHomeState extends State<FisherHome> {
   void initState() {
     super.initState();
     initList();
+    showout.sort((a, b) => a.date.compareTo(b.date));
   }
 
   Widget build(BuildContext context) {
@@ -135,7 +156,7 @@ class _FisherHomeState extends State<FisherHome> {
   }
 
   Widget _timeoutcard(int index) {
-    var nowT = localtimelist[0].stTime.subtract(Duration(days: (index + 100)));
+    // var nowT = localtimelist[0].stTime.subtract(Duration(days: (index + 100)));
     return Card(
       child: ListTile(
         leading: const Icon(
@@ -144,7 +165,7 @@ class _FisherHomeState extends State<FisherHome> {
           color: Color.fromARGB(255, 226, 67, 67),
         ),
         title: Text(
-          formatDate(nowT, [yyyy, '/', mm, '/', dd, '           連續休息時間少於10小時！']),
+          '           連續休息時間少於10小時！',
           style: TextStyle(
             color: Color.fromARGB(255, 82, 82, 82),
             fontSize: 20.0,
@@ -182,15 +203,15 @@ class _FisherHomeState extends State<FisherHome> {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: _buildTiles(index, state),
       ),
-      itemCount: (state + 3) * (state + 1),
+      itemCount: showout.length,
     );
   }
 
   Widget _buildTiles(int index, int state) {
-    var nowT = localtimelist[0].stTime.subtract(Duration(days: (index + (state + 3) * (state + 1))));
+    var nowT = showout[index].date;
     return ExpansionTile(
-      key: PageStorageKey<int>(index + (state + 3) * (state + 1)),
-      initiallyExpanded: (state == 0),
+      key: PageStorageKey<int>(index),
+      initiallyExpanded: true,
       // tilePadding: EdgeInsets.fromLTRB(0, 0, 458, 0),
       leading: (state == 0)
           ? Checkbox(
@@ -215,7 +236,7 @@ class _FisherHomeState extends State<FisherHome> {
               width: 20,
             ),
       title: Text(
-        formatDate(nowT, [yyyy, '/', mm, '/', dd]),
+        nowT,
         style: const TextStyle(
           color: Color.fromARGB(255, 55, 81, 136),
           fontWeight: FontWeight.bold,
@@ -225,18 +246,18 @@ class _FisherHomeState extends State<FisherHome> {
       children: [
         Container(
           padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-          child: _lis(),
+          child: _lis(showout[index].sheet),
           // Column(children: [_row()]),
         )
       ],
     );
   }
 
-  Widget _lis() {
+  Widget _lis(List<Timelist> level) {
     return Column(
-        children: List<Widget>.generate(localtimelist.length, (ID) {
-      var _stime = localtimelist[ID].stTime;
-      var _etime = localtimelist[ID].endTime;
+        children: List<Widget>.generate(level.length, (ID) {
+      var _stime = level[ID].stTime;
+      var _etime = level[ID].endTime;
       return Column(
         children: [
           Container(
@@ -246,13 +267,13 @@ class _FisherHomeState extends State<FisherHome> {
               borderRadius: BorderRadius.circular(100),
             ),
             child: Row(children: [
-              (localtimelist[ID].state == 0)
+              (level[ID].state == 1)
                   ? const Icon(size: 30, color: Color.fromARGB(255, 142, 160, 197), Icons.local_dining)
                   : const Icon(size: 30, color: Color.fromARGB(255, 44, 84, 121), FontAwesome5.fish),
               const SizedBox(
                 width: 15,
               ),
-              (localtimelist[ID].state == 0)
+              (level[ID].state == 1)
                   ? const Text(
                       '用餐',
                       style: TextStyle(
@@ -273,7 +294,7 @@ class _FisherHomeState extends State<FisherHome> {
                 width: 15,
               ),
               Text(
-                formatDate(_stime, [HH, ':', nn]),
+                _stime,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -289,7 +310,7 @@ class _FisherHomeState extends State<FisherHome> {
                 ),
               ),
               Text(
-                formatDate(_etime, [HH, ':', nn]),
+                _etime,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -299,9 +320,9 @@ class _FisherHomeState extends State<FisherHome> {
               const SizedBox(
                 width: 15,
               ),
-              (localtimelist[ID].state == 1)
+              (level[ID].state == 2)
                   ? Text(
-                      '${(_etime.difference(_stime).inMinutes) / 60}',
+                      '${level[ID].dura}',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -311,7 +332,7 @@ class _FisherHomeState extends State<FisherHome> {
                   : const SizedBox(
                       width: 15,
                     ),
-              (localtimelist[ID].state == 1)
+              (level[ID].state == 2)
                   ? const Text(
                       '小時',
                       style: TextStyle(

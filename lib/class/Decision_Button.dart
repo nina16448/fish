@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
@@ -155,13 +157,7 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
               setState(() {
                 for (var key in update_queue.keys) {
                   update(update_queue[key]!);
-                  // if (rec.isEmpty) {
-                  //   addtime(update_queue[key]!);
-                  //   debugPrint('add time: ${update_queue[key]!.MemberId}in${update_queue[key]!.Date}');
-                  // } else {
-                  //   updatetime(update_queue[key]!);
-                  //   debugPrint('update time: ${update_queue[key]!.MemberId}in${update_queue[key]!.Date}');
-                  // }
+                  timetostring(update_queue[key]!);
                 }
                 update_queue.clear();
               });
@@ -185,11 +181,14 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
     setState(() {
       // rec = getlist;
       debugPrint('有沒有找到? ${getlist.isNotEmpty}');
+
       if (getlist.isEmpty) {
         addtime(addk);
+
         debugPrint('add time: ${addk.MemberId} in ${addk.Date}');
       } else {
         updatetime(addk);
+
         debugPrint('update time: ${addk.MemberId} in ${addk.Date}');
       }
     });
@@ -201,5 +200,83 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
 
   void updatetime(WorkSheet addk) async {
     await SheetDB.updateSheet(addk, Sheetdb);
+  }
+
+  void timetostring(WorkSheet addk) {
+    Timelist section = Timelist(0, 'init', 'endTime', 0.0);
+    List<Timelist> datalist = [];
+    WorkTime fisherformat = WorkTime(
+      SheetId: addk.SheetId,
+      MemberId: addk.MemberId,
+      Date: addk.Date,
+      Datalist: 'null',
+      State: addk.State,
+    );
+    // setState(() {
+    for (int i = 0; i < addk.Sheet.length; i++) {
+      debugPrint('工作狀態: 第$i格 新${addk.Sheet[i]}, 舊${section.state}');
+      // debugPrint('陣列狀態:S${datalist.toString()}');
+
+      // if (section.state != addk.Sheet[i]) {
+      if (section.stTime.compareTo('init') == 0) {
+        //   //開始一段時間段
+        section.dura = 0;
+        section.stTime = numtoTime[i];
+      }
+
+      if (i != (addk.Sheet.length - 1) && addk.Sheet[i] != addk.Sheet[i + 1]) {
+        section.endTime = numtoTime[i + 1];
+        debugPrint('工作狀態: 開始${section.stTime} 結束: ${section.endTime}, dura: ${section.dura}');
+        if (addk.Sheet[i] != 0 && section.state != 0) {
+          section.dura += 0.5;
+          section.state = addk.Sheet[i];
+          debugPrint('加之前陣列:S${datalist.toString()}');
+          datalist.add(Timelist(section.state, section.stTime, section.endTime, section.dura));
+          debugPrint('新增時間段: ${section.toString()}');
+          debugPrint('陣列:S${datalist.toString()}');
+        }
+        section.dura = 0;
+        section.stTime = 'init';
+      }
+      // }
+      section.state = addk.Sheet[i];
+      section.dura += 0.5;
+      debugPrint('工作狀態: 開始${section.stTime} 結束: ${section.endTime}, dura: ${section.dura}');
+    }
+
+    fisherformat.Datalist = jsonEncode(datalist);
+    debugPrint('要加密帳陣列:S${datalist.toString()}');
+    // debugPrint(jsonDecode(fisherformat.Datalist));
+    uploadfish(fisherformat);
+
+    // }
+    // );
+  }
+
+  void uploadfish(WorkTime addk) async {
+    final getlist = await WorkTimeDB.getsheet(addk.MemberId, addk.Date, WorkTimedb);
+    setState(() {
+      // rec = getlist;
+      debugPrint('有沒有找到? ${getlist.isNotEmpty}');
+
+      if (getlist.isEmpty) {
+        addfish(addk);
+
+        debugPrint('add fish time: ${addk.MemberId} in ${addk.Date}');
+      } else {
+        updatefish(addk);
+
+        debugPrint('update fish time: ${addk.MemberId} in ${addk.Date}');
+      }
+      debugPrint(addk.toString());
+    });
+  }
+
+  void addfish(WorkTime addk) async {
+    await WorkTimeDB.AddWorkTime(addk, WorkTimedb);
+  }
+
+  void updatefish(WorkTime addk) async {
+    await WorkTimeDB.updateSheet(addk, WorkTimedb);
   }
 }

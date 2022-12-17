@@ -64,27 +64,6 @@ class WorkSheet {
   }
 }
 
-class WorkTime {
-  int SheetId;
-  String MemberId;
-  List<Timelist> Datalist;
-
-  WorkTime({required this.SheetId, required this.MemberId, required this.Datalist});
-  Map<String, dynamic> toMap() {
-    return {
-      'SheetId': SheetId,
-      'MemberId': MemberId,
-      'Datalist': Datalist,
-    };
-  }
-
-  @override
-  String toString() {
-    String dataString = json.encode(Datalist);
-    return "WorkTime{SheetId: $SheetId, MemberId: $MemberId, Sheet: $dataString}";
-  }
-}
-
 class WarningRecord {
   int recId;
   String MemberId;
@@ -353,6 +332,110 @@ class WarningDB {
     await db.delete(
       'WarningRec',
       where: "Id = ? AND Date = ?",
+      whereArgs: [id, date],
+    );
+  }
+}
+
+class WorkTime {
+  int SheetId;
+  String MemberId;
+  String Date;
+  String Datalist;
+  int State;
+
+  WorkTime({required this.SheetId, required this.MemberId, required this.Date, required this.Datalist, required this.State});
+  Map<String, dynamic> toMap() {
+    return {
+      'SheetId': SheetId,
+      'MemberId': MemberId,
+      'Date': Date,
+      'Datalist': Datalist,
+      'State': State,
+    };
+  }
+
+  @override
+  String toString() {
+    return "WorkTime{SheetId: $SheetId, MemberId: $MemberId,Date: $Date, Sheet: $Datalist, State: $State}";
+  }
+}
+
+class WorkTimeDB {
+  static Future<Database> getDB() async {
+    return openDatabase(
+      join(await getDatabasesPath(), 'WorkTime.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          'CREATE TABLE WorkTime(SheetId INT PRIMARY KEY NOT NULL, MemberId TEXT, Date TEXT, Datalist TEXT, State INTEGER)',
+        );
+      },
+      version: 1,
+    );
+  }
+
+  static Future<void> AddWorkTime(WorkTime sheet, Future<Database> DB) async {
+    final db = await DB;
+    await db.insert(
+      'WorkTime',
+      sheet.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  static Future<List<WorkTime>> getsheet(String id, String date, Future<Database> DB) async {
+    final db = await DB;
+    final List<Map<String, dynamic>> maps;
+    if (id == 'All') {
+      maps = await db.rawQuery('SELECT * FROM WorkTime');
+    } else {
+      maps = await db.rawQuery('SELECT * FROM WorkTime WHERE MemberId = ? AND Date = ?', [id, date]);
+    }
+    return List.generate(maps.length, (i) {
+      return WorkTime(
+        SheetId: maps[i]['SheetId'],
+        MemberId: maps[i]['MemberId'],
+        Date: maps[i]['Date'],
+        Datalist: maps[i]['Datalist'],
+        State: maps[i]['State'],
+      );
+    });
+  }
+
+  static Future<List<WorkTime>> getstatesheet(String id, int state, Future<Database> DB) async {
+    final db = await DB;
+    final List<Map<String, dynamic>> maps;
+    if (id == 'All') {
+      maps = await db.rawQuery('SELECT * FROM WorkTime');
+    } else {
+      maps = await db.rawQuery('SELECT * FROM WorkTime WHERE MemberId = ? AND State = ?', [id, state]);
+    }
+    return List.generate(maps.length, (i) {
+      return WorkTime(
+        SheetId: maps[i]['SheetId'],
+        MemberId: maps[i]['MemberId'],
+        Date: maps[i]['Date'],
+        Datalist: maps[i]['Datalist'],
+        State: maps[i]['State'],
+      );
+    });
+  }
+
+  static Future<void> updateSheet(WorkTime sheet, Future<Database> DB) async {
+    final Database db = await DB;
+    await db.update(
+      'WorkTime',
+      sheet.toMap(),
+      where: "MemberId = ? AND Date = ?",
+      whereArgs: [sheet.MemberId, sheet.Date],
+    );
+  }
+
+  static Future<void> deleteSheet(String id, String date, Future<Database> DB) async {
+    final Database db = await DB;
+    await db.delete(
+      'WorkTime',
+      where: "MemberId = ? AND Date = ?",
       whereArgs: [id, date],
     );
   }

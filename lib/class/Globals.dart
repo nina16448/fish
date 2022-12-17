@@ -23,7 +23,27 @@ class Timelist {
   int state; // 0是吃飯，1是工作
   String stTime;
   String endTime;
-  String dura;
+  double dura;
+
+  Timelist.fromJson(Map<String, dynamic> json)
+      : state = json["state"],
+        stTime = json["stTime"],
+        endTime = json["endTime"],
+        dura = json["dura"];
+
+  Map<String, dynamic> toJson() {
+    return {
+      "state": this.state,
+      "stTime": this.stTime,
+      "endTime": this.endTime,
+      "dura": this.dura,
+    };
+  }
+
+  @override
+  String toString() {
+    return "WorkSheet{state: $state, stTime: $stTime, endTime: $endTime, dura: $dura}";
+  }
 }
 
 DateTime currentTime = DateTime.now();
@@ -31,6 +51,7 @@ DateTime aTime = DateTime.now();
 int prev = 1000;
 bool idRight = true;
 bool passRight = true;
+
 Member now_login = Member(
   Id: '',
   Name: '',
@@ -142,6 +163,7 @@ class Namelist {
 Future<Database> Crewdb = CrewDB.getDB();
 Future<Database> Sheetdb = SheetDB.getDB();
 Future<Database> Warningdb = WarningDB.getDB();
+Future<Database> WorkTimedb = WorkTimeDB.getDB();
 
 List<int> initlist() {
   return List<int>.generate(48, (int index) => 0, growable: false);
