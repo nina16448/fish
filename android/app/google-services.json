@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "683073478014",
+    "project_id": "fish-f6e35",
+    "storage_bucket": "fish-f6e35.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683073478014:android:1b41c375fe6f3b89a9a72f",
+        "android_client_info": {
+          "package_name": "com.makan.face_auth_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683073478014-had2601if6blmm6tjek0a10mhntf2bh2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBdrGqy9s6V-8hi6-cCnLGhMoW_5BqVYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683073478014-had2601if6blmm6tjek0a10mhntf2bh2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
