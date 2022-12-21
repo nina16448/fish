@@ -5,6 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:fish/class/Globals.dart';
 import 'package:fish/database/databse_helper.dart';
 import 'package:fish/services/image_converter.dart';
+import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as imglib;
@@ -16,7 +17,7 @@ class MLService {
   List _predictedData = [];
   List get predictedData => _predictedData;
 
-  Future initialize() async {
+  Future<bool> initialize() async {
     late Delegate delegate;
     try {
       if (Platform.isAndroid) {
@@ -31,24 +32,25 @@ class MLService {
         );
       } else if (Platform.isIOS) {
         delegate = GpuDelegate(
-          options: GpuDelegateOptions(
-              allowPrecisionLoss: true,
-              waitType: TFLGpuDelegateWaitType.active),
+          options: GpuDelegateOptions(allowPrecisionLoss: true, waitType: TFLGpuDelegateWaitType.active),
         );
       }
       var interpreterOptions = InterpreterOptions()..addDelegate(delegate);
 
-      this._interpreter = await Interpreter.fromAsset('mobilefacenet.tflite',
-          options: interpreterOptions);
+      // this._interpreter = await Interpreter.fromAsset('mobilefacenet.tflite', options: interpreterOptions);
+      this._interpreter = await Interpreter.fromAsset('mobilefacenet.tflite');
     } catch (e) {
       print('Failed to load model.');
       print(e);
+      return false;
     }
+    return true;
   }
 
   void setCurrentPrediction(CameraImage cameraImage, Face? face) {
-    if (_interpreter == null) throw Exception('Interpreter is null');
     if (face == null) throw Exception('Face is null');
+    if (_interpreter == null) throw Exception('Interpreter is null');
+
     List input = _preProcess(cameraImage, face);
 
     input = input.reshape([1, 112, 112, 3]);
@@ -78,8 +80,7 @@ class MLService {
     double y = faceDetected.boundingBox.top - 10.0;
     double w = faceDetected.boundingBox.width + 10.0;
     double h = faceDetected.boundingBox.height + 10.0;
-    return imglib.copyCrop(
-        convertedImage, x.round(), y.round(), w.round(), h.round());
+    return imglib.copyCrop(convertedImage, x.round(), y.round(), w.round(), h.round());
   }
 
   imglib.Image _convertCameraImage(CameraImage image) {

@@ -8,12 +8,16 @@ import 'class/Decision_Button.dart';
 import 'class/drawer.dart';
 import 'class/list.dart';
 import 'class/top_bar.dart';
-import 'class/Globals.dart';
+import 'package:fish/class/Globals.dart';
 import 'database/database.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
 import 'package:animated_button/animated_button.dart';
+import 'package:fish/services/camera.service.dart';
+import 'package:fish/services/ml_service.dart';
+import 'package:fish/services/face_detector_service.dart';
+import 'package:fish/locator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -34,6 +38,25 @@ class _HomePage extends State<HomePage> {
   void clearText() {
     fieldText.clear();
     fieldTextW.clear();
+  }
+
+  MLService _mlService = locator<MLService>();
+  FaceDetectorService _mlKitService = locator<FaceDetectorService>();
+  CameraService _cameraService = locator<CameraService>();
+  bool loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeServices();
+  }
+
+  _initializeServices() async {
+    setState(() => loading = true);
+    await _cameraService.initialize();
+    await _mlService.initialize();
+    _mlKitService.initialize();
+    setState(() => loading = false);
   }
 
   @override
@@ -241,33 +264,31 @@ class _HomePage extends State<HomePage> {
             // ),
             backgroundColor: Colors.transparent,
             body: Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    login_text,
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      width: 250,
-                      child: textfield,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: 250,
-                      child: password,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    confirmbutton,
-                    // const SizedBox(
-                    //   height: 20,
-                    // ),
-                    faceButton,
-                  ]),
+              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                login_text,
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: 250,
+                  child: textfield,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: 250,
+                  child: password,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                confirmbutton,
+                // const SizedBox(
+                //   height: 20,
+                // ),
+                faceButton,
+              ]),
             )));
   }
 

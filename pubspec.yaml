@@ -92,11 +92,12 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-   - assets/images/background.jpg
-   - assets/images/fish.jpg
-   - assets/images/fish2.jpg
-   - assets/images/login.jpg
-   - assets/images/fisherman.jpg
+    - assets/mobilefacenet.tflite
+    - assets/images/background.jpg
+    - assets/images/fish.jpg
+    - assets/images/fish2.jpg
+    - assets/images/login.jpg
+    - assets/images/fisherman.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

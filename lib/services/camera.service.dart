@@ -25,8 +25,7 @@ class CameraService {
 
   Future<CameraDescription> _getCameraDescription() async {
     List<CameraDescription> cameras = await availableCameras();
-    return cameras.firstWhere((CameraDescription camera) =>
-        camera.lensDirection == CameraLensDirection.front);
+    return cameras.firstWhere((CameraDescription camera) => camera.lensDirection == CameraLensDirection.back);
   }
 
   Future _setupCameraController({
@@ -54,17 +53,21 @@ class CameraService {
   }
 
   Future<XFile?> takePicture() async {
+    debugPrint('拿照片ㄛ1');
     assert(_cameraController != null, 'Camera controller not initialized');
+    debugPrint('拿照片ㄛ2');
     await _cameraController?.stopImageStream();
+    debugPrint('拿照片ㄛ3');
     XFile? file = await _cameraController?.takePicture();
+    debugPrint('拿照片ㄛ4');
     _imagePath = file?.path;
+    debugPrint('拿照片ㄛ5');
     return file;
   }
 
   Size getImageSize() {
     assert(_cameraController != null, 'Camera controller not initialized');
-    assert(
-        _cameraController!.value.previewSize != null, 'Preview size is null');
+    assert(_cameraController!.value.previewSize != null, 'Preview size is null');
     return Size(
       _cameraController!.value.previewSize!.height,
       _cameraController!.value.previewSize!.width,
