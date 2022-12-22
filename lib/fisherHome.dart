@@ -19,6 +19,8 @@ import 'database/database.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 
 class FisherHome extends StatefulWidget {
   const FisherHome({Key? key}) : super(key: key);
@@ -51,6 +53,7 @@ class _FisherHomeState extends State<FisherHome> {
   double groupAligment = -1.0;
   Member now = now_login;
   int? _timerange = 0;
+  bool _limit = false;
 
   // List<Timelist> localtimelist = [];
   List<Timelist> localtime = [];
@@ -566,6 +569,16 @@ class _FisherHomeState extends State<FisherHome> {
                 updlimit();
                 getstateList();
                 showout.sort((a, b) => b.date.compareTo(a.date));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                // ElegantNotification(
+                //   // title: Text("已確認工時"),
+                //   description: Text("已確認工時"),
+                //   icon: Icon(
+                //     Icons.access_alarm,
+                //     color: Colors.orange,
+                //   ),
+                //   progressIndicatorColor: Colors.orange,
+                // ).show(context);
               });
               Navigator.pop(context);
             },
@@ -581,6 +594,36 @@ class _FisherHomeState extends State<FisherHome> {
       ),
     );
   }
+
+  final snackBar = SnackBar(
+    content: Row(
+      children: const [
+        Icon(
+          Icons.warning,
+          color: Colors.white,
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        Text(
+          '已確認工時',
+          style: TextStyle(
+            fontFamily: 'GenJyuu',
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 255, 255, 255),
+            fontSize: 20.0,
+            // decoration: TextDecoration.underline,
+          ),
+        ),
+      ],
+    ),
+    backgroundColor: Color.fromARGB(255, 255, 238, 89),
+    behavior: SnackBarBehavior.floating,
+    margin: EdgeInsets.all(30),
+    shape: StadiumBorder(),
+    duration: Duration(milliseconds: 800),
+    elevation: 30,
+  );
 
   Widget _logout() {
     return Container(
@@ -653,11 +696,17 @@ class _FisherHomeState extends State<FisherHome> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      avatar: Icon(
-        size: 40,
-        Icons.notifications,
-        color: (_value == 1) ? Color.fromARGB(255, 81, 105, 162) : Color.fromARGB(255, 255, 255, 255),
-      ),
+      avatar: (_limit == false)
+          ? Icon(
+              size: 40,
+              Icons.notifications,
+              color: (_value == 1) ? Color.fromARGB(255, 81, 105, 162) : Color.fromARGB(255, 255, 255, 255),
+            )
+          : const Icon(
+              size: 40,
+              Icons.notifications_active,
+              color: Color.fromARGB(255, 255, 225, 89),
+            ),
       label: Text(
         '超時紀錄',
         style: TextStyle(
@@ -670,6 +719,7 @@ class _FisherHomeState extends State<FisherHome> {
       backgroundColor: const Color.fromARGB(255, 135, 168, 202),
       selectedColor: const Color.fromARGB(255, 188, 203, 231),
       onSelected: (bool selected) {
+        _limit = false;
         print(selected);
         setState(() {
           updlimit();
@@ -814,6 +864,7 @@ class _FisherHomeState extends State<FisherHome> {
   void cheaktime(String date) async {
     final list1 = await SheetDB.getsheet(now.Id, date, Sheetdb);
     final list2 = await WorkTimeDB.getsheet(now.Id, date, WorkTimedb);
+
     setState(() {
       list1[0].State = 1;
       list2[0].State = 1;
@@ -824,6 +875,7 @@ class _FisherHomeState extends State<FisherHome> {
       cheakforlimit(list1[0]);
       showout.clear();
       getstateList();
+      // ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
   }
 
@@ -844,11 +896,13 @@ class _FisherHomeState extends State<FisherHome> {
       Date: addk.Date,
     );
 
-    if (count <= 10) addforlimit(neww);
+    if (count <= 20) addforlimit(neww);
   }
 
   void addforlimit(WarningRecord addk) async {
     await WarningDB.Addrecord(addk, Warningdb);
+    _limit = true;
+    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
     debugPrint('超時!!已新增超時時段 ${addk.Name} in ${addk.Date}');
   }
 

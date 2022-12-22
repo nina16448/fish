@@ -9,6 +9,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 
 class FMCupertinoButtonVC extends StatefulWidget {
   FMCupertinoButtonVC({
@@ -153,11 +155,41 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
             /// the action's text color to red.
             isDestructiveAction: true,
             onPressed: () {
+              final snackBar = SnackBar(
+                content: Row(
+                  children: const [
+                    Icon(
+                      Icons.warning,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      '已確認工時',
+                      style: TextStyle(
+                        fontFamily: 'GenJyuu',
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        fontSize: 20.0,
+                        // decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ],
+                ),
+                backgroundColor: Color.fromARGB(255, 255, 238, 89),
+                behavior: SnackBarBehavior.floating,
+                margin: EdgeInsets.all(30),
+                shape: StadiumBorder(),
+                duration: Duration(milliseconds: 800),
+                elevation: 30,
+              );
               debugPrint('確認:D');
               setState(() {
                 for (var key in update_queue.keys) {
                   update(update_queue[key]!);
                   timetostring(update_queue[key]!);
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
                 update_queue.clear();
               });

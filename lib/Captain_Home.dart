@@ -278,7 +278,7 @@ class _Captain_HomeState extends State<Captain_Home> {
     if (query.isNotEmpty) {
       List<Member> dummyListData = [];
       dummySearchList.forEach((item) {
-        if (item.Name.contains(query.toUpperCase())) {
+        if (item.Name.contains(query.toUpperCase()) || item.Id.contains(query) || item.Name.contains(query.toLowerCase())) {
           dummyListData.add(item);
         }
       });
