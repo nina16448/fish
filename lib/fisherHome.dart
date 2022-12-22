@@ -19,8 +19,10 @@ import 'database/database.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
-import 'package:elegant_notification/elegant_notification.dart';
-import 'package:elegant_notification/resources/arrays.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/safe_area_values.dart';
+import 'package:top_snackbar_flutter/tap_bounce_container.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class FisherHome extends StatefulWidget {
   const FisherHome({Key? key}) : super(key: key);
@@ -569,16 +571,14 @@ class _FisherHomeState extends State<FisherHome> {
                 updlimit();
                 getstateList();
                 showout.sort((a, b) => b.date.compareTo(a.date));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                // ElegantNotification(
-                //   // title: Text("已確認工時"),
-                //   description: Text("已確認工時"),
-                //   icon: Icon(
-                //     Icons.access_alarm,
-                //     color: Colors.orange,
-                //   ),
-                //   progressIndicatorColor: Colors.orange,
-                // ).show(context);
+                showTopSnackBar(
+                  displayDuration: Duration(milliseconds: 1000),
+                  Overlay.of(context),
+                  const CustomSnackBar.success(
+                    textStyle: TextStyle(fontSize: 24, color: Colors.white),
+                    message: '已確認工時',
+                  ),
+                );
               });
               Navigator.pop(context);
             },
@@ -594,36 +594,6 @@ class _FisherHomeState extends State<FisherHome> {
       ),
     );
   }
-
-  final snackBar = SnackBar(
-    content: Row(
-      children: const [
-        Icon(
-          Icons.warning,
-          color: Colors.white,
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        Text(
-          '已確認工時',
-          style: TextStyle(
-            fontFamily: 'GenJyuu',
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 255, 255, 255),
-            fontSize: 20.0,
-            // decoration: TextDecoration.underline,
-          ),
-        ),
-      ],
-    ),
-    backgroundColor: Color.fromARGB(255, 255, 238, 89),
-    behavior: SnackBarBehavior.floating,
-    margin: EdgeInsets.all(30),
-    shape: StadiumBorder(),
-    duration: Duration(milliseconds: 800),
-    elevation: 30,
-  );
 
   Widget _logout() {
     return Container(
@@ -902,6 +872,7 @@ class _FisherHomeState extends State<FisherHome> {
   void addforlimit(WarningRecord addk) async {
     await WarningDB.Addrecord(addk, Warningdb);
     _limit = true;
+    noticelimit = true;
     // ScaffoldMessenger.of(context).showSnackBar(snackBar);
     debugPrint('超時!!已新增超時時段 ${addk.Name} in ${addk.Date}');
   }

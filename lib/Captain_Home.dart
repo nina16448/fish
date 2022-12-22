@@ -36,6 +36,8 @@ class _Captain_HomeState extends State<Captain_Home> {
 
     setState(() {
       searchList = list;
+      currentTime = DateTime.now();
+      aTime = DateTime.now();
     });
   }
 

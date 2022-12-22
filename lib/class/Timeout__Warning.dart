@@ -40,6 +40,7 @@ class _TimeList extends State<TimeList> {
       for (var key in rec.keys) {
         notices.add(datelimit(key, rec[key]!));
       }
+      notices.sort(((a, b) => b.Date.compareTo(a.Date)));
     });
   }
 
@@ -47,6 +48,9 @@ class _TimeList extends State<TimeList> {
   void initState() {
     super.initState();
     initList();
+    setState(() {
+      notices.sort(((a, b) => b.Date.compareTo(a.Date)));
+    });
   }
 
   Widget build(BuildContext context) {

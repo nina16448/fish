@@ -38,10 +38,7 @@ class MyDrawer extends StatelessWidget {
                   child: Text(
                     '選單',
                     // textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white),
+                    style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w700, color: Colors.white),
                   ),
                 ),
               ),
@@ -53,14 +50,11 @@ class MyDrawer extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ListTile(
-                          selectedColor:
-                              const Color.fromARGB(255, 81, 105, 162),
+                          selectedColor: const Color.fromARGB(255, 81, 105, 162),
                           trailing: Icon(
                             Icons.last_page,
                             size: 30,
-                            color: (state == 0)
-                                ? Color.fromARGB(255, 81, 105, 162)
-                                : Color.fromARGB(0, 255, 255, 255),
+                            color: (state == 0) ? Color.fromARGB(255, 81, 105, 162) : Color.fromARGB(0, 255, 255, 255),
                           ),
                           selected: (state == 0),
                           leading: const Icon(
@@ -69,47 +63,45 @@ class MyDrawer extends StatelessWidget {
                           ),
                           title: Text(
                             '工時登記',
-                            style: TextStyle(
-                                color: (state == 0)
-                                    ? Color.fromARGB(255, 81, 105, 162)
-                                    : Color.fromARGB(255, 88, 88, 88),
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold),
+                            style: TextStyle(color: (state == 0) ? Color.fromARGB(255, 81, 105, 162) : Color.fromARGB(255, 88, 88, 88), fontSize: 20.0, fontWeight: FontWeight.bold),
                           ),
                           onTap: () {
                             if (state == 0) {
                               Navigator.pop(context);
                             } else {
-                              Navigator.popAndPushNamed(
-                                  context, '/Captain_Home');
+                              Navigator.popAndPushNamed(context, '/Captain_Home');
                             }
                           },
                         ),
                         ListTile(
-                          selectedColor:
-                              const Color.fromARGB(255, 81, 105, 162),
-                          trailing: Icon(
-                            Icons.last_page,
-                            color: (state == 1)
-                                ? Color.fromARGB(255, 81, 105, 162)
-                                : Color.fromARGB(0, 255, 255, 255),
-                            size: 30,
-                          ),
+                          selectedColor: const Color.fromARGB(255, 81, 105, 162),
+                          trailing: (noticelimit == false)
+                              ? Icon(
+                                  Icons.last_page,
+                                  color: (state == 1) ? Color.fromARGB(255, 81, 105, 162) : Color.fromARGB(0, 255, 255, 255),
+                                  size: 30,
+                                )
+                              : const Icon(
+                                  Icons.report,
+                                  color: Color.fromARGB(255, 255, 89, 89),
+                                  size: 30,
+                                ),
                           selected: (state == 1),
-                          leading: const Icon(
+                          leading: Icon(
                             Icons.notifications_active,
                             size: 30,
+                            color: (noticelimit == true)
+                                ? Color.fromARGB(255, 255, 225, 89)
+                                : (state == 1)
+                                    ? Color.fromARGB(255, 81, 105, 162)
+                                    : Color.fromARGB(255, 139, 139, 139),
                           ),
                           title: Text(
                             '超時紀錄',
-                            style: TextStyle(
-                                color: (state == 1)
-                                    ? Color.fromARGB(255, 81, 105, 162)
-                                    : Color.fromARGB(255, 88, 88, 88),
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold),
+                            style: TextStyle(color: (state == 1) ? Color.fromARGB(255, 81, 105, 162) : Color.fromARGB(255, 88, 88, 88), fontSize: 20.0, fontWeight: FontWeight.bold),
                           ),
                           onTap: () {
+                            noticelimit = false;
                             if (state == 1) {
                               Navigator.pop(context);
                             } else {
@@ -118,13 +110,10 @@ class MyDrawer extends StatelessWidget {
                           },
                         ),
                         ListTile(
-                          selectedColor:
-                              const Color.fromARGB(255, 81, 105, 162),
+                          selectedColor: const Color.fromARGB(255, 81, 105, 162),
                           trailing: Icon(
                             Icons.last_page,
-                            color: (state == 2)
-                                ? Color.fromARGB(255, 81, 105, 162)
-                                : Color.fromARGB(0, 255, 255, 255),
+                            color: (state == 2) ? Color.fromARGB(255, 81, 105, 162) : Color.fromARGB(0, 255, 255, 255),
                             size: 30,
                           ),
                           selected: (state == 2),
@@ -134,12 +123,7 @@ class MyDrawer extends StatelessWidget {
                           ),
                           title: Text(
                             '人員管理',
-                            style: TextStyle(
-                                color: (state == 2)
-                                    ? Color.fromARGB(255, 81, 105, 162)
-                                    : Color.fromARGB(255, 88, 88, 88),
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold),
+                            style: TextStyle(color: (state == 2) ? Color.fromARGB(255, 81, 105, 162) : Color.fromARGB(255, 88, 88, 88), fontSize: 20.0, fontWeight: FontWeight.bold),
                           ),
                           onTap: () {
                             if (state == 2) {
@@ -158,10 +142,7 @@ class MyDrawer extends StatelessWidget {
                       ),
                       title: const Text(
                         '登出系統',
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 88, 88, 88),
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Color.fromARGB(255, 88, 88, 88), fontSize: 20.0, fontWeight: FontWeight.bold),
                       ),
                       onTap: () {
                         Navigator.popUntil(context, ModalRoute.withName('/'));

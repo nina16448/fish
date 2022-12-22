@@ -134,7 +134,7 @@ class Namelist {
   // String body;
   bool isExpanded;
 }
-
+bool noticelimit = false;
 // List<Namelist> getList() {
 //   return [
 //     Namelist('徐濤'),
