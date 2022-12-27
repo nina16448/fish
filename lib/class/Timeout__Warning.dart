@@ -24,24 +24,23 @@ class TimeList extends StatefulWidget {
 
 class _TimeList extends State<TimeList> {
   List<datelimit> notices = [];
-  var rec = Map<String, List<String>>();
+  final rec = Map<String, List<String>>();
   datelimit tmp = datelimit('', []);
 
   void initList() async {
     final list = await WarningDB.getRecord('All', Warningdb);
+
     setState(() {
       for (int i = 0; i < list.length; i++) {
         if (rec[list[i].Date] == null) {
           rec[list[i].Date] = [];
         }
-
         rec[list[i].Date]!.add(list[i].Name);
       }
       for (var key in rec.keys) {
-        tmp.Date = key;
-        tmp.member = rec[key]!;
-        notices.add(tmp);
+        notices.add(datelimit(key, rec[key]!));
       }
+      notices.sort(((a, b) => b.Date.compareTo(a.Date)));
     });
   }
 
@@ -49,6 +48,9 @@ class _TimeList extends State<TimeList> {
   void initState() {
     super.initState();
     initList();
+    setState(() {
+      notices.sort(((a, b) => b.Date.compareTo(a.Date)));
+    });
   }
 
   Widget build(BuildContext context) {

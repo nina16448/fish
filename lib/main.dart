@@ -1,22 +1,29 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'Login_Page.dart';
-import 'Login_Choice.dart';
-import 'PassowrdLogin.dart';
-import 'FaceIDLogin.dart';
-import 'Captain_Home.dart';
-import 'time.dart';
-import 'fisherHome.dart';
-import 'class/Choose_Button.dart';
-import 'PersonnelManagement.dart';
-import '../database/database.dart';
+import 'package:fish/Login_Page.dart';
+import 'package:fish/PassowrdLogin.dart';
+import 'package:fish/FaceIDLogin.dart';
+import 'package:fish/Captain_Home.dart';
+import 'package:fish/time.dart';
+import 'package:fish/fisherHome.dart';
+import 'package:fish/class/Choose_Button.dart';
+import 'package:fish/PersonnelManagement.dart';
+import 'package:fish/database/database.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:fish/firebase_options.dart';
+import 'package:fish/locator.dart';
+import 'package:fish/MyFaceLogin.dart';
 
 void main() async {
+  setupServices();
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
@@ -40,7 +47,8 @@ class MyApp extends StatelessWidget {
           })), //字體
       routes: {
         '/': (context) => const HomePage(), //首頁
-        '/FaceIDLogin': (context) => const FaceIDLogin(),
+        // '/FaceIDLogin': (context) => const FaceIDLogin(),
+        '/FaceIDLogin': (context) => const MyFaceIDLogin(),
         '/Captain_Home': (context) => const Captain_Home(),
         '/time': (context) => const Timeout(),
         '/Management': (context) => const Management(),

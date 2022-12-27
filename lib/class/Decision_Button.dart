@@ -9,6 +9,10 @@ import 'package:sqflite/sqflite.dart';
 import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/safe_area_values.dart';
+import 'package:top_snackbar_flutter/tap_bounce_container.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class FMCupertinoButtonVC extends StatefulWidget {
   FMCupertinoButtonVC({
@@ -160,6 +164,14 @@ class FMCupertinoButtonState extends State<FMCupertinoButtonVC> {
                   timetostring(update_queue[key]!);
                 }
                 update_queue.clear();
+                showTopSnackBar(
+                  displayDuration: Duration(milliseconds: 1000),
+                  Overlay.of(context),
+                  const CustomSnackBar.success(
+                    textStyle: TextStyle(fontSize: 24, color: Colors.white),
+                    message: '新增時段成功！',
+                  ),
+                );
               });
               Navigator.pop(context);
             },

@@ -87,8 +87,7 @@ class _Management extends State<Management> {
                 child: Container(
                   padding: const EdgeInsets.only(
                     top: 10,
-                    bottom:
-                        2, // This can be the space you need between text and underline
+                    bottom: 2, // This can be the space you need between text and underline
                   ),
                   decoration: const BoxDecoration(
                       border: Border(
@@ -125,12 +124,14 @@ class _Management extends State<Management> {
                   child: ListView.builder(
                 padding: const EdgeInsets.only(top: 0, right: 10, bottom: 100),
                 itemBuilder: (BuildContext context, int index) => Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
                   child: _item(allmember[index], index),
                 ),
                 itemCount: allmember.length,
               )),
+              const SizedBox(
+                height: 30.0,
+              ),
             ],
           ),
         ),
@@ -297,13 +298,10 @@ class _Management extends State<Management> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                             child: TextFormField(
                               validator: (String? value) {
-                                return (value == null || value.isEmpty)
-                                    ? '姓名不可為空'
-                                    : null;
+                                return (value == null || value.isEmpty) ? '姓名不可為空' : null;
                               },
                               style: TextStyle(
                                 fontSize: 20.0,
@@ -328,13 +326,10 @@ class _Management extends State<Management> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                             child: TextFormField(
                               validator: (String? value) {
-                                return (value == null || value.isEmpty)
-                                    ? 'ID不可為空'
-                                    : null;
+                                return (value == null || value.isEmpty) ? 'ID不可為空' : null;
                               },
                               style: TextStyle(
                                 fontSize: 20.0,
@@ -359,8 +354,7 @@ class _Management extends State<Management> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                             child: TextFormField(
                               validator: (String? value) {
                                 return null;
@@ -388,13 +382,10 @@ class _Management extends State<Management> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                             child: TextFormField(
                               validator: (String? value) {
-                                return (value == null || value.isEmpty)
-                                    ? '密碼不可為空'
-                                    : null;
+                                return (value == null || value.isEmpty) ? '密碼不可為空' : null;
                               },
                               style: TextStyle(
                                 fontSize: 20.0,

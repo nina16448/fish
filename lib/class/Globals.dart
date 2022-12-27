@@ -4,6 +4,7 @@ import '../database/database.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
+import 'dart:convert';
 
 dynamic pageButtonState = -1;
 bool confirmCheckState = false;
@@ -133,7 +134,7 @@ class Namelist {
   // String body;
   bool isExpanded;
 }
-
+bool noticelimit = false;
 // List<Namelist> getList() {
 //   return [
 //     Namelist('徐濤'),
@@ -181,4 +182,33 @@ class fisherdata {
   String iD;
   String pW;
   String workspace;
+}
+
+
+class User {
+  String user;
+  String password;
+  List modelData;
+
+  User({
+    required this.user,
+    required this.password,
+    required this.modelData,
+  });
+
+  static User fromMap(Map<String, dynamic> user) {
+    return new User(
+      user: user['user'],
+      password: user['password'],
+      modelData: jsonDecode(user['model_data']),
+    );
+  }
+
+  toMap() {
+    return {
+      'user': user,
+      'password': password,
+      'model_data': jsonEncode(modelData),
+    };
+  }
 }

@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.0-429.0.dev <3.0.0'
+  sdk: '>=2.19.0-444.2.beta <3.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -43,7 +43,7 @@ dependencies:
   google_fonts: ^3.0.1
   intl: ^0.17.0
   meta: ^1.7.0
-  package_info_plus: ^2.0.0
+  # package_info_plus: ^2.0.0
   path_provider: ^2.0.11
   provider: ^6.0.2
   rally_assets: ^3.0.1
@@ -62,8 +62,14 @@ dependencies:
   camera: ^0.10.0+4
   animated_button: ^0.2.0
   fluttericon: ^2.0.0
-  firebase_ml_vision: ^0.12.0+3
+  firebase_core: ^2.4.0
   google_mlkit_face_detection: ^0.5.0
+  image: ^3.2.2
+  tflite_flutter: ^0.9.0
+  get_it: ^7.2.0
+  top_snackbar_flutter: ^3.0.0
+  video_player: ^2.4.10
+  # firebase_ml_vision: ^0.12.0+3
 
 dev_dependencies:
   flutter_test:
@@ -88,11 +94,12 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-   - assets/images/background.jpg
-   - assets/images/fish.jpg
-   - assets/images/fish2.jpg
-   - assets/images/login.jpg
-   - assets/images/fisherman.jpg
+    - assets/mobilefacenet.tflite
+    - assets/images/background.jpg
+    - assets/images/fish.jpg
+    - assets/images/fish2.jpg
+    - assets/images/login.jpg
+    - assets/images/fisherman.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
