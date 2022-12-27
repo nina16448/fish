@@ -16,10 +16,10 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fish/firebase_options.dart';
 import 'package:fish/locator.dart';
+import 'package:fish/MyFaceLogin.dart';
 
 void main() async {
   setupServices();
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -47,7 +47,8 @@ class MyApp extends StatelessWidget {
           })), //字體
       routes: {
         '/': (context) => const HomePage(), //首頁
-        '/FaceIDLogin': (context) => const FaceIDLogin(),
+        // '/FaceIDLogin': (context) => const FaceIDLogin(),
+        '/FaceIDLogin': (context) => const MyFaceIDLogin(),
         '/Captain_Home': (context) => const Captain_Home(),
         '/time': (context) => const Timeout(),
         '/Management': (context) => const Management(),

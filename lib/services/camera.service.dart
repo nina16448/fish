@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:camera/camera.dart';
@@ -17,7 +18,9 @@ class CameraService {
   Future<void> initialize() async {
     if (_cameraController != null) return;
     CameraDescription description = await _getCameraDescription();
+
     await _setupCameraController(description: description);
+
     this._cameraRotation = rotationIntToImageRotation(
       description.sensorOrientation,
     );
@@ -53,15 +56,14 @@ class CameraService {
   }
 
   Future<XFile?> takePicture() async {
-    debugPrint('拿照片ㄛ1');
     assert(_cameraController != null, 'Camera controller not initialized');
-    debugPrint('拿照片ㄛ2');
     await _cameraController?.stopImageStream();
-    debugPrint('拿照片ㄛ3');
-    XFile? file = await _cameraController?.takePicture();
-    debugPrint('拿照片ㄛ4');
-    _imagePath = file?.path;
-    debugPrint('拿照片ㄛ5');
+    // File imageFile;
+    XFile file = await _cameraController!.takePicture();
+    if (file != null) {
+      _imagePath = file.path;
+    }
+
     return file;
   }
 

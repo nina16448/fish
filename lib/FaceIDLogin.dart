@@ -1,4 +1,6 @@
 // ignore_for_file: file_names
+import 'dart:io';
+
 import 'package:animations/animations.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
