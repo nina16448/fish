@@ -69,6 +69,7 @@ dependencies:
   get_it: ^7.2.0
   top_snackbar_flutter: ^3.0.0
   video_player: ^2.4.10
+  # flutter_launcher_icons: ^0.11.0
   # firebase_ml_vision: ^0.12.0+3
 
 dev_dependencies:
@@ -82,6 +83,7 @@ dev_dependencies:
   string_scanner: ^1.1.0
   test: ^1.21.1
   web_benchmarks: ^0.1.0
+  flutter_launcher_icons: ^0.11.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -127,3 +129,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_icons:
+  image_path: "assets/icons/ic_launcher.jpg"
+  android: "fisherman" # can specify file name here e.g. "ic_launcher"
+  ios: true # can specify file name here e.g. "My-Launcher-Icon"
